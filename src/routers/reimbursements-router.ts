@@ -3,35 +3,60 @@ import utilities from '../services/utilities';
 import User from '../models/User'
 import db from '../models/db'
 
+
 let users = db.users;
 let refunds = db.refunds;
 let financeManagerUser = users[1];
 let adminUser = users[0];
+import * as reimbursementService from '../services/reimbursement-service'
 
 const refundRouter = express.Router();
 
 // find reimbursements by user
-refundRouter.get('/reimbursements/author/userId:userId', (req, res) => { 
+refundRouter.get('/author/userId:userId', (req, res) => { 
+    let userCookie = req.cookies['identity']; // name of cookie with user details
+    if (!(utilities.trueIfFinanceManger(userCookie) || userCookie.userId === req.params['id'])) {
+        res.send("Invalid Credentials... you're not that user or big DK!");
+        return
+    }
+    // similiar filter operation to matchUserAndPassword but with userId
+    refunds = reimbursementService.getReimbursementsFromUserId(req.params['userId'])
+    res.send(refunds)
+}) 
+
+// find reimbursements by statusId
+refundRouter.get('/status/:statusId', (req, res) => {
     let userCookie = req.cookies['identity']; // name of cookie with user details
     if (!(utilities.trueIfFinanceManger(userCookie))) {
         res.send("Invalid Credentials... you're not that user or big DK!");
         return
     }
     // similiar filter operation to matchUserAndPassword but with userId
-    let matchUserWithId = (user) => (req.params['id'] === String(user.userId))
-    let matchedUser: User = users.filter(matchUserWithId)[0];
-
-    res.send(matchedUser)
-}) 
-
-// find reimbursements by statusId
-refundRouter.get('/reimbursements/status/:statusId', (req, res) => console.log('should return all reim of a given status'))
+    refunds = reimbursementService.getReimbursementsFromStatus(req.params['statusId'])
+    res.send(refunds)
+})
 
 
-refundRouter.post('/reimbursements', (req, res) => res.send(req.body.params) ); //users submit reimb requests here
+refundRouter.post('/', (req, res) => {
+    let userCookie = req.cookies['identity'];
+    if (req.body['reimbursementId'] !== 0) { 
+        res.status(201).send('Incorrect reimbursementId, please set to 0');
+        return;
+    }
+    let reimbursement = reimbursementService.addReimbursement(userCookie.userId, req.body);
+    res.send(reimbursement); //users submit reimb requests here
+})
 
 
-refundRouter.patch('/reimbursements', (req, res) => console.log('upating existing reimbursement')) //finance manager app/deny reimb requests here
+refundRouter.patch('/', (req, res) => {
+    let userCookie = req.cookies['identity']; // name of cookie with user details
+    if (!(utilities.trueIfFinanceManger(userCookie))) {
+        res.send("Invalid Credentials... you're not that user or big DK!");
+        return
+    }
+    let reimbursement = reimbursementService.updateReimbursement(req.body);
+    if (reimbursement) {res.send(reimbursement)}
+    else {res.send('That reimbursementId does not match any in the database')}
+})
 
-
-
+export default refundRouter

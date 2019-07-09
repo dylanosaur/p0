@@ -14,7 +14,7 @@
 
 export default class Reimbursement{
     reimbursementId: Number;
-    author: String;
+    author: Number; // userId number
     amount: Number;
     dateSubmitted: String;
     dateResolved: String;
