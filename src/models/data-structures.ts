@@ -13,33 +13,7 @@ let users: Array<User> = [adminUser, financeManagerUser, firstEmployee];
 
 
 /*
-class reimbursementParent{
-    constructor() {
-    reimbursementId,// primary key
-    author, // foreign key -> User, not null
-    amount, // not null
-    dateSubmitted, // not null
-    dateResolved,
-    description, // not null
-    resolver, // foreign key -> User
-    status, // foreign ey -> ReimbursementStatus, not null
-    type // foreign key -> ReimbursementType
-    }
-}
 
-class reimbursementStatusParent{
-    constructor() {
-        statusId, // primary key
-        status // not null, unique
-    }
-}
-
-class reimbursementTypeParent{
-    constructor() {
-        typeId, // primary key
-        type // not null, unique
-    }
-}
 
 */
 
