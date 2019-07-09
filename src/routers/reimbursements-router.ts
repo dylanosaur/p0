@@ -1,7 +1,10 @@
 import express, { Request, Response } from 'express';
 import utilities from '../services/utilities';
 import User from '../models/User'
-import users from '../models/db'
+import db from '../models/db'
+
+let users = db.users;
+let refunds = db.refunds;
 let financeManagerUser = users[1];
 let adminUser = users[0];
 
@@ -17,7 +20,7 @@ refundRouter.get('/reimbursements/author/userId:userId', (req, res) => {
     // similiar filter operation to matchUserAndPassword but with userId
     let matchUserWithId = (user) => (req.params['id'] === String(user.userId))
     let matchedUser: User = users.filter(matchUserWithId)[0];
-    
+
     res.send(matchedUser)
 }) 
 

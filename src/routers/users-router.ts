@@ -1,7 +1,9 @@
 import express, { Request, Response } from 'express';
 import utilities from '../services/utilities';
 import User from '../models/User'
-import users from '../models/db'
+import db from '../models/db'
+let users = db.users;
+let refunds = db.refunds;
 let financeManagerUser = users[1];
 let adminUser = users[0];
 
