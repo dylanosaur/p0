@@ -1,0 +1,21 @@
+import express from "express";
+import bodyParser = require("body-parser");
+import cookieParser = require("cookie-parser");
+import usersRouter from './routers/users-router'
+import loginRouter from './routers/login-router'
+// app has been defined as type any bc functions (it's true type) shouldn't have methods
+// this results in a lot of annoying TS errors that are not helpful and will be ignored
+let app = express();
+
+//Enable express to use body-parser and cookie-parser as middle-ware
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(express.json())
+
+// define socket port channel for app/server communication and start listening
+const port = 3000
+app.listen(port, () => console.log(`ERS app listening on port ${port}!`))
+
+app.use('/login', loginRouter);
+app.use('/users', usersRouter);
+

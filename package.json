@@ -1,0 +1,29 @@
+{
+  "name": "project0-ers",
+  "version": "0.0.1",
+  "description": "'create a back-end API for the Expense Reimbursement System'",
+  "main": "app.js",
+  "scripts": {
+    "start": "ts-node src/app.ts",
+    "test": "echo 'lalala lala la laaaaaaaaa'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dylanosaur/p0-ers-api.git"
+  },
+  "author": "Dylan Adams",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dylanosaur/p0-ers-api/issues"
+  },
+  "homepage": "https://github.com/dylanosaur/p0-ers-api#readme",
+  "dependencies": {
+    "@types/cookie-parser": "^1.4.1",
+    "@types/express": "^4.17.0",
+    "@types/node": "^12.0.12",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
+    "express": "^4.17.1",
+    "express-session": "^1.16.2"
+  }
+}
