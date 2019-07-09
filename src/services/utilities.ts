@@ -1,5 +1,5 @@
 import User from 'models/User'
-import users from './models/db'
+import users from '../models/db'
 let financeManagerUser = users[1];
 let adminUser = users[0];
 

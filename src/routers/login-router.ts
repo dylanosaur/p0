@@ -1,5 +1,5 @@
 import express from 'express';
-import utilities from '../utilities';
+import utilities from '../services/utilities';
 
 const loginRouter = express.Router()
 // when setting cookie information on a response .coookie(cookie info) must be called before .json(body info)

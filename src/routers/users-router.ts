@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import utilities from '../utilities';
+import utilities from '../services/utilities';
 import User from '../models/User'
 import users from '../models/db'
 let financeManagerUser = users[1];
