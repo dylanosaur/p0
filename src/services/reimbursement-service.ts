@@ -9,17 +9,15 @@ export function getReimbursementsFromUserId(userId) {
     //let queryString = `select * from reimbursements;`
     console.log(queryString);
     let result = qDB.queryDB(queryString)
-    console.log(result)
-    //let matchRefundsWithUserId = (refund) => (refund.author=== parseInt(userId) )
-    //let matchedRefunds: Array<Reimbursement> = refunds.filter(matchRefundsWithUserId);
-
     return result
 }
 
-export function getReimbursementsFromStatus(status): Array<Reimbursement> {
-    let matchRefundsWithStatus = (refund) => (refund.status=== parseInt(status) )
-    let matchedRefunds: Array<Reimbursement> = refunds.filter(matchRefundsWithStatus);
-    return matchedRefunds
+export function getReimbursementsFromStatus(status) {
+    let queryString = `select * from reimbursements where status = ${parseInt(status)};`
+    let result = qDB.queryDB(queryString)
+    //let matchRefundsWithStatus = (refund) => (refund.status=== parseInt(status) )
+    //let matchedRefunds: Array<Reimbursement> = refunds.filter(matchRefundsWithStatus);
+    return result
 }
 
 export function addReimbursement(userId, body): Reimbursement {
