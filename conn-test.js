@@ -7,6 +7,7 @@ const pool = new Pool({
   port: 5432,
 })
 
+// clients are acquired/relased from pool automatically in the pool.query method
 pool.query('SELECT * FROM books', (error, results) => {
     if (error) {
       throw error

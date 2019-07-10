@@ -13,7 +13,7 @@ import ReimbursementType from './ReimbursementType'
 let Status = ReimbursementStatus;
 let rType = ReimbursementType;
 let rStatuses = [new Status(1, 'Pending'), new Status(2, 'Approved'), new Status(3, 'Denied')]
-let rTypes = [new rType(1, 'Loding'), new rType(2, 'Travel'), new rType(3, 'Food'), new rType(4, 'Other')]
+let rTypes = [new rType(1, 'Lodging'), new rType(2, 'Travel'), new rType(3, 'Food'), new rType(4, 'Other')]
 
 let r1: Reimbursement = new Reimbursement(1, 2, 300, '04-10-19', '05-01-19', 'airplane and luggage', 'DKoenig', '', 2);
 let r2: Reimbursement = new Reimbursement(1, 1, 25, '04-16-19', '', 'business lunch', '', '', 1);

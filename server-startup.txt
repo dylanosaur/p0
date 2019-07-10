@@ -1,0 +1,79 @@
+drop table if exists reimbursements;
+drop table if exists users;
+drop table if exists roles;
+drop table if exists reimbursement_statuses;
+drop table if exists reimbursement_types;
+
+create table roles (
+  roleId int primary key,
+  roleName varchar (20)
+);
+
+create table users (
+	userId int primary key,
+	userName varchar (20),
+	passwordHash varchar (64),
+	firstName varchar (20),
+	lastName varchar (20),
+	email varchar (30),
+	roleId int, 
+	foreign key (roleId) references roles (roleId)
+);
+
+
+create table reimbursement_types (
+  typeId int primary key, 
+  typeName varchar (10)
+);
+
+create table reimbursement_statuses (
+  statusId int primary key, 
+  status varchar (10)
+);
+
+create table reimbursements ( 
+  reimbursementId  int primary key,
+  author int,  foreign key (author) references users (userId),  
+  amount float,
+  dateSubmitted int, 
+  dateResolved int,
+  description varchar (30), 
+  resolver int, foreign key (resolver) references users (userId), 
+  status int, foreign key (status) references reimbursement_statuses (statusId),
+  typeId int, foreign key (typeId) references reimbursement_types (typeId)
+);
+
+
+insert into roles (roleId, roleName) values (1, 'admin');
+insert into roles (roleId, roleName) values (2, 'finance-manager');
+insert into roles (roleId, roleName) values (3, 'employee');
+select * from roles;
+
+insert into users values (
+	0, 'DAdams', 'password', 
+	'Dylan', 'Adams', 'dadams10642@outlook.com', 1);
+insert into users values (	
+	1, 'DKoenig', 'moneymoney', 
+	'Dylan', 'Koenig', 'bigDK@gmail.com', 2);
+insert into users values ( 
+	2, 'BAdams', 'perfume', 
+	'Becca', 'Adams',  'becca.boo@aol.com', 3);
+select * from users;
+
+insert into reimbursement_types values (1, 'Lodging');
+insert into reimbursement_types values (2, 'Travel'); 
+insert into reimbursement_types values (3, 'Food');
+insert into reimbursement_types values (4, 'Other');
+select * from reimbursement_types;
+
+insert into reimbursement_statuses values (1, 'Pending');
+insert into reimbursement_statuses values (2, 'Approved');
+insert into reimbursement_statuses values (3, 'Denied');
+select * from reimbursement_statuses;
+
+insert into reimbursements values (1, 2, 300, 1562721376, 1562721476, 'airplane and luggage', 1, 2, 2);
+insert into reimbursements values (2, 1, 25, 1562720476, null, 'business lunch', 1, 1, 3);
+insert into reimbursements values (3, 2, 25, 1562711476, null, 'business lunch', 1, 1, 3);
+insert into reimbursements values (4, 0, 5000, 1562701476, 1562721400, 'spy equipment', 1, 3, 4);
+select * from reimbursements
+
