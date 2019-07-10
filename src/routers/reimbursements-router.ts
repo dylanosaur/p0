@@ -13,14 +13,15 @@ import * as reimbursementService from '../services/reimbursement-service'
 const refundRouter = express.Router();
 
 // find reimbursements by user
-refundRouter.get('/author/userId:userId', (req, res) => { 
+refundRouter.get('/author/userId:userId', async (req, res) => { 
     let userCookie = req.cookies['identity']; // name of cookie with user details
     if (!(utilities.trueIfFinanceManger(userCookie) || userCookie.userId === req.params['id'])) {
         res.send("Invalid Credentials... you're not that user or big DK!");
         return
     }
     // similiar filter operation to matchUserAndPassword but with userId
-    refunds = reimbursementService.getReimbursementsFromUserId(req.params['userId'])
+    refunds = await reimbursementService.getReimbursementsFromUserId(req.params['userId'])
+    console.log(refunds);
     res.send(refunds)
 }) 
 

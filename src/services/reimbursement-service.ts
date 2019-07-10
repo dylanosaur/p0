@@ -2,10 +2,16 @@
 import db from '../models/db'
 import Reimbursement from '../models/Reimbursement';
 let refunds = db.refunds;
+import * as qDB from '../sql-service/queryDB'
 
-export function getReimbursementsFromUserId(userId): Array<Reimbursement> {
+export async function getReimbursementsFromUserId(userId){
+    let queryString = `select * from reimbursements where author = ${parseInt(userId)};`
+    //let queryString = `select * from reimbursements;`
+    console.log(queryString);
+    let result = await qDB.queryDB(queryString)
     let matchRefundsWithUserId = (refund) => (refund.author=== parseInt(userId) )
     let matchedRefunds: Array<Reimbursement> = refunds.filter(matchRefundsWithUserId);
+
     return matchedRefunds
 }
 
