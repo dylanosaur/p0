@@ -13,8 +13,10 @@ export async function queryDB(queryString) {
       })
 
     // clients are acquired/relased from pool automatically in the pool.query method
-    const result = pool.query(queryString)
-    .then(res => {console.log('user:', res.rows)})
+    let result;
+    await pool.query(queryString)
+    .then(res => {console.log('user:', res.rows); result = res.rows;})
     .catch(e => setImmediate(() => { throw e }))
     .then( () => pool.end().then(() => console.log('pool has ended')))
+    return result
 }

@@ -20,8 +20,7 @@ refundRouter.get('/author/userId:userId', async (req, res) => {
         return
     }
     // similiar filter operation to matchUserAndPassword but with userId
-    refunds = await reimbursementService.getReimbursementsFromUserId(req.params['userId'])
-    console.log(refunds);
+    let refunds = await reimbursementService.getReimbursementsFromUserId(req.params['userId'])
     res.send(refunds)
 }) 
 
