@@ -4,9 +4,8 @@ import cookieParser = require("cookie-parser");
 import usersRouter from './routers/users-router'
 import loginRouter from './routers/login-router'
 import reimbursementsRouter from './routers/reimbursements-router'
-// app has been defined as type any bc functions (it's true type) shouldn't have methods
-// this results in a lot of annoying TS errors that are not helpful and will be ignored
-let app = express();
+
+const app = express();
 
 //Enable express to use body-parser and cookie-parser as middle-ware
 app.use(cookieParser());
