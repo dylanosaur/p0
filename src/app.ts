@@ -23,12 +23,11 @@ app.use('/reimbursements', reimbursementsRouter)
 
 // todo
 // use delete property where posssible instead of stripping reimbursementID
-// replace authentication with fake DB with calls to postgresql db
-// fix comments in csvValues and csvKeys
+// make db calls more explicit ("be explicit, not implicit" -Zen of Python)
 // re make db so that model field keys and db field keys are 1 to 1
-
+//
 // stretch to do
 // hash passwords and compare hashes
 // add QC on inputs
 // move pool to top level so that 1 pool is created and used throughout a session
-// 
+//  

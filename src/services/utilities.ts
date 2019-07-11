@@ -1,35 +1,42 @@
 import User from 'models/User'
-import db from '../models/db'
-let users = db.users
-let financeManagerUser = users[1];
-let adminUser = users[0];
+import * as qDB from '../sql-service/queryDB'
 
 // check username: password combination against lookup table
-let authenticateUser = function(req) {
+let authenticateUser = async function(req) {
     let usn: string = req.body.username;
     let pass: string = req.body.password;
     console.log('authenticating user', req.body); // DEBUG
     // return true if usn and password match the pair values from DB
     let matchUserAndPassword = (user) => (usn===user.username && pass===user.password)
-    // filter array for elements that make function true - i.e. the user with matching usn/pass (only 0 or 1 match possible)
-    let matchedUser: User = users.filter(matchUserAndPassword)[0]
-    console.log('found users:', matchedUser) // DEBUG
-    return matchedUser
+    // compare the given username/password with the user in the DB (if it exists) 
+    let queryString = `select * from users where username = '${usn}';`
+    console.log(queryString);
+    let matchedUser = await qDB.queryDB(queryString);
+    console.log('found users:', matchedUser[0]) // DEBUG
+    return matchedUser[0]
 }
 
 
 // useful for checking credentials
 // these two functions could be combined, but will decrease readability
-let trueIfFinanceManger = function(userCookie): boolean {
-    let fm = financeManagerUser; // quick alias for readability
-    return (userCookie.userId == fm.userId && userCookie.password == fm.password) 
+let trueIfFinanceManger = async function(userCookie) {
+    let queryString = `select * from users where role = 2;`
+    console.log(queryString);
+    let fm = await qDB.queryDB(queryString);
+    console.log('found finance-manager', fm[0]);
+    return (userCookie.userId == fm[0].userId && userCookie.password == fm[0].password) 
 }
-let trueIfAdmin = function(userCookie): boolean {
-    return (userCookie.userId == adminUser.userId && userCookie.password == adminUser.password)
+
+let trueIfAdmin = async function(userCookie){
+    let queryString = `select * from users where role = 1;`
+    console.log(queryString);
+    let admin = await qDB.queryDB(queryString);
+    console.log('found admin: ', admin[0]);
+    return (userCookie.userId == admin[0].userId && userCookie.password == admin[0].password)
 }
 
 
-const keyValueSQL = function(object, includeKeys=true, includeValues=true) {
+const keyValueSQL = function(object) {
     // return a string formatted like: key1 = value1, key2 = 'string2', ..., keyFinal = valueFinal
     // strings will have quotes around them, numbers will be bare
     let keysValuesString = ''
@@ -44,8 +51,7 @@ const keyValueSQL = function(object, includeKeys=true, includeValues=true) {
 }
 
 const csvKeys = function(object) {
-    // return a string formatted like: key1 = value1, key2 = 'string2', ..., keyFinal = valueFinal
-    // strings will have quotes around them, numbers will be bare
+    // return a string formatted like: key1, key2, key3, ..., keyN
     const keyList = Object.keys(object)
     let keysString = ''
     for (let key of keyList) {
