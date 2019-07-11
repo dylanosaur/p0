@@ -28,4 +28,8 @@ app.use('/reimbursements', reimbursementsRouter)
 // fix comments in csvValues and csvKeys
 // re make db so that model field keys and db field keys are 1 to 1
 
-
+// stretch to do
+// hash passwords and compare hashes
+// add QC on inputs
+// move pool to top level so that 1 pool is created and used throughout a session
+// 
