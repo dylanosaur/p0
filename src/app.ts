@@ -22,4 +22,9 @@ app.use('/users', usersRouter);
 app.use('/reimbursements', reimbursementsRouter)
 
 
+// todo
+// use delete property where posssible instead of stripping reimbursementID
+// replace authentication with fake DB with calls to postgresql db
+
+
 
