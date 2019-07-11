@@ -43,7 +43,7 @@ create table reimbursements (
   typeId int, foreign key (typeId) references reimbursement_types (typeId)
 );
 
-
+ 
 insert into roles values (1, 'admin');
 insert into roles values (2, 'finance-manager');
 insert into roles values (3, 'employee');
