@@ -28,4 +28,56 @@ let trueIfAdmin = function(userCookie): boolean {
     return (userCookie.userId == adminUser.userId && userCookie.password == adminUser.password)
 }
 
-export default {authenticateUser, trueIfAdmin, trueIfFinanceManger}
+
+const keyValueSQL = function(object, includeKeys=true, includeValues=true) {
+    // return a string formatted like: key1 = value1, key2 = 'string2', ..., keyFinal = valueFinal
+    // strings will have quotes around them, numbers will be bare
+    let keysValuesString = ''
+    for (let key of Object.keys(object)) {
+        switch(typeof object[key]) {
+            case 'string': keysValuesString += ` ${key} = '${object[key]}', `; break;
+            case 'number': keysValuesString += ` ${key} = ${object[key]}, `; break;
+        }
+    }
+    keysValuesString = keysValuesString.substring(0, keysValuesString.lastIndexOf(',')) //remove the final comma
+    return keysValuesString 
+}
+
+const csvKeys = function(object) {
+    // return a string formatted like: key1 = value1, key2 = 'string2', ..., keyFinal = valueFinal
+    // strings will have quotes around them, numbers will be bare
+    const keyList = Object.keys(object)
+    let keysString = ''
+    for (let key of keyList) {
+        keysString += `${key}, `
+    }
+    keysString = keysString.substring(0, keysString.lastIndexOf(',')) //remove the final comma
+    return keysString 
+}
+
+const csvValues = function(object) {
+    // return a string formatted like: key1 = value1, key2 = 'string2', ..., keyFinal = valueFinal
+    // strings will have quotes around them, numbers will be bare
+    let valuesString = ''
+    const keyList = Object.keys(object)
+    for (let key of keyList) {
+        switch(typeof object[key]) {
+            case 'number': valuesString += `${object[key]}, `; break;
+            case 'string': valuesString += `'${object[key]}',  `; break;
+        }
+    }
+    valuesString = valuesString.substring(0, valuesString.lastIndexOf(',')) //remove the final comma
+    return valuesString 
+}
+
+const removeRID = function(object) { 
+    let newReimbursement = {}
+    for (let key of Object.keys(object)) {
+        // reimbursementId is always set to 0 in body, and will be assigned automatically
+        if (key == 'reimbursementId') {continue} 
+        newReimbursement[key] = object[key] 
+    }
+    return newReimbursement 
+}
+
+export default {authenticateUser, trueIfAdmin, trueIfFinanceManger, keyValueSQL, csvKeys, csvValues, removeRID }

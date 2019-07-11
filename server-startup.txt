@@ -60,10 +60,10 @@ insert into users values (
 	'Becca', 'Adams',  'becca.boo@aol.com', 3);
 select * from users;
 
-insert into reimbursement_types values (1, 'Lodging');
-insert into reimbursement_types values (2, 'Travel'); 
-insert into reimbursement_types values (3, 'Food');
-insert into reimbursement_types values (4, 'Other');
+insert into reimbursement_types (typeName) values ('Lodging');
+insert into reimbursement_types (typeName) values ('Travel'); 
+insert into reimbursement_types (typeName) values ('Food');
+insert into reimbursement_types (typeName) values ('Other');
 select * from reimbursement_types;
 
 insert into reimbursement_statuses values (1, 'Pending');
@@ -71,10 +71,14 @@ insert into reimbursement_statuses values (2, 'Approved');
 insert into reimbursement_statuses values (3, 'Denied');
 select * from reimbursement_statuses;
 
-insert into reimbursements values (1, 3, 300, 1562721376, 1562721476, 'airplane and luggage', 1, 2, 2);
-insert into reimbursements values (2, 2, 25, 1562720476, null, 'business lunch', 1, 1, 3);
-insert into reimbursements values (3, 3, 25, 1562711476, null, 'business lunch', 1, 1, 3);
-insert into reimbursements values (4, 1, 5000, 1562701476, 1562721400, 'spy equipment', 1, 3, 4);
+insert into reimbursements (author, amount, dateSubmitted, dateResolved, description, resolver, status, typeId)
+	values (3, 300, 1562721376, 1562721476, 'airplane and luggage', 1, 2, 2);
+insert into reimbursements (author, amount, dateSubmitted, dateResolved, description, resolver, status, typeId)
+	values (2, 25, 1562720476, null, 'business lunch', 1, 1, 3);
+insert into reimbursements (author, amount, dateSubmitted, dateResolved, description, resolver, status, typeId)
+	values (3, 25, 1562711476, null, 'business lunch', 1, 1, 3);
+insert into reimbursements (author, amount, dateSubmitted, dateResolved, description, resolver, status, typeId)
+	values (1, 5000, 1562701476, 1562721400, 'spy equipment', 1, 3, 4);
 
 select * from users
 
