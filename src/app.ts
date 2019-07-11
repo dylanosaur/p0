@@ -26,6 +26,6 @@ app.use('/reimbursements', reimbursementsRouter)
 // use delete property where posssible instead of stripping reimbursementID
 // replace authentication with fake DB with calls to postgresql db
 // fix comments in csvValues and csvKeys
-
+// re make db so that model field keys and db field keys are 1 to 1
 
 
