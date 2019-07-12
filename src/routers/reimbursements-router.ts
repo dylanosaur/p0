@@ -13,21 +13,28 @@ import * as reimbursementService from '../services/reimbursement-service'
 const refundRouter = express.Router();
 
 // find reimbursements by user
-refundRouter.get('/author/userId:userId', async (req, res) => { 
+refundRouter.get('/author/userId:userId', async (req, res) => {
     let userCookie = req.cookies['identity']; // name of cookie with user details
-    if (!(utilities.trueIfFinanceManger(userCookie) || userCookie.userId === req.params['id'])) {
+    const isFinanceManager = await utilities.trueIfFinanceManger(userCookie);
+    const isCurrentUser = (userCookie.userId === parseInt(req.params['userId']));
+    console.log(userCookie, req.params )
+    console.log('', isFinanceManager, isCurrentUser)
+    if (!(isFinanceManager || isCurrentUser)) {
         res.send("Invalid Credentials... you're not that user or big DK!");
         return
     }
     // similiar filter operation to matchUserAndPassword but with userId
+    console.log('using userId', userCookie.userId, req.params['userId']);
     let refunds = await reimbursementService.getReimbursementsFromUserId(req.params['userId'])
-    res.send(refunds)
-}) 
+    if (refunds.length > 0) { res.status(200).send(refunds); }
+    else { res.sendStatus(500); }
+})
 
 // find reimbursements by statusId
 refundRouter.get('/status/:statusId', async (req, res) => {
     let userCookie = req.cookies['identity']; // name of cookie with user details
-    if (!(utilities.trueIfFinanceManger(userCookie))) {
+    const isFinanceManager = await utilities.trueIfFinanceManger(userCookie);
+    if (!isFinanceManager) {
         res.send("Invalid Credentials... you're not that user or big DK!");
         return
     }
@@ -39,7 +46,7 @@ refundRouter.get('/status/:statusId', async (req, res) => {
 
 refundRouter.post('/', async (req, res) => {
     let userCookie = req.cookies['identity'];
-    if (req.body['reimbursementId'] !== 0) { 
+    if (req.body['reimbursementId'] !== 0) {
         res.status(201).send('Incorrect reimbursementId, please set to 0');
         return;
     }
@@ -55,8 +62,8 @@ refundRouter.patch('/', async (req, res) => {
         return
     }
     let reimbursement = await reimbursementService.updateReimbursement(req.body);
-    if (reimbursement) {res.send(reimbursement)}
-    else {res.send('That reimbursementId does not match any in the database')}
+    if (reimbursement) { res.send(reimbursement) }
+    else { res.send('That reimbursementId does not match any in the database') }
 })
 
 export default refundRouter

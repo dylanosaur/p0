@@ -7,10 +7,12 @@ loginRouter.post('/', async (req, res) => {
     let match = await utilities.authenticateUser(req)
     if (match) {
         // create cookie for user identification
-        let userCookie = {"userId": match.userId, "password": match.password};
+        let userCookie = {"userId": match.userid, "username": match.username, "password": match.password};
+        console.log('setting cookie to', userCookie);
         // set response cookie as def above and response body to user information
         res.cookie('identity', userCookie);
-        res.json(await utilities.authenticateUser(req));
+        const result = await utilities.authenticateUser(req)
+        res.json(result);
         // response ready to send
         res.send();
     }

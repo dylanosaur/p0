@@ -1,89 +1,60 @@
-import User from 'models/User'
-import * as qDB from '../sql-service/queryDB'
+
+import Reimbursement from '../models/Reimbursement'
+import db from '../sql-service/pg-connect'
 
 // check username: password combination against lookup table
 let authenticateUser = async function(req) {
-    let usn: string = req.body.username;
-    let pass: string = req.body.password;
     console.log('authenticating user', req.body); // DEBUG
-    // return true if usn and password match the pair values from DB
-    let matchUserAndPassword = (user) => (usn===user.username && pass===user.password)
-    // compare the given username/password with the user in the DB (if it exists) 
-    let queryString = `select * from users where username = '${usn}';`
+    // look for matches in db
+    let queryString = `select * from users where username = $1 and password = $2;`;
     console.log(queryString);
-    let matchedUser = await qDB.queryDB(queryString);
-    console.log('found users:', matchedUser[0]) // DEBUG
-    return matchedUser[0]
+    const matchedUser = await db.query(queryString, [req.body.username, req.body.password]);
+    const userInfo = matchedUser.rows[0];
+    console.log('found users:', userInfo); // DEBUG
+    return userInfo;
 }
 
 
 // useful for checking credentials
 // these two functions could be combined, but will decrease readability
 let trueIfFinanceManger = async function(userCookie) {
-    let queryString = `select * from users where role = 2;`
+    const queryString = `select (roleid) from users where username = $1 and password = $2;`
     console.log(queryString);
-    let fm = await qDB.queryDB(queryString);
-    console.log('found finance-manager', fm[0]);
-    return (userCookie.userId == fm[0].userId && userCookie.password == fm[0].password) 
+    const result = await db.query(queryString, [userCookie.username, userCookie.password]);
+    const userRole = result.rows[0].roleid;
+    console.log('userRole is found to be:', userRole, typeof(userRole) );
+    return (userRole===2)
 }
 
 let trueIfAdmin = async function(userCookie){
-    let queryString = `select * from users where role = 1;`
+    let queryString = `select (username, password) from users where roleid = 1;`
     console.log(queryString);
-    let admin = await qDB.queryDB(queryString);
-    console.log('found admin: ', admin[0]);
-    return (userCookie.userId == admin[0].userId && userCookie.password == admin[0].password)
+    let admin = await db.query(queryString);
+    // could add QC check here
+    admin = admin[0];
+    console.log('found admin: ', admin);
+    return (userCookie.userId == admin.userId && userCookie.password == admin.password);
 }
 
 
-const keyValueSQL = function(object) {
-    // return a string formatted like: key1 = value1, key2 = 'string2', ..., keyFinal = valueFinal
-    // strings will have quotes around them, numbers will be bare
-    let keysValuesString = ''
-    for (let key of Object.keys(object)) {
-        switch(typeof object[key]) {
-            case 'string': keysValuesString += ` ${key} = '${object[key]}', `; break;
-            case 'number': keysValuesString += ` ${key} = ${object[key]}, `; break;
+const moneyString = function (a:number, b:number) {
+    let s = [];
+    for (let i=a; i < b; i++) { s.push(`$${i}`);}
+    return s.join(', ');
+}
+
+const sanitizeReimbursement = function(obj) { 
+    const nullReimbursement = new Reimbursement();
+    console.log(Object.keys(nullReimbursement), Object.keys(obj));
+    // ok it's not actually actually a new reimbursement but will have a subset of reimbursement fields
+    const newReimbursement = {}; 
+    for (let key of Object.keys(nullReimbursement)) {
+        if (Object.keys(obj).includes(key)) { 
+            if (key == 'reimbursementId') continue
+            newReimbursement[key] = obj[key];
         }
     }
-    keysValuesString = keysValuesString.substring(0, keysValuesString.lastIndexOf(',')) //remove the final comma
-    return keysValuesString 
+    return newReimbursement
 }
 
-const csvKeys = function(object) {
-    // return a string formatted like: key1, key2, key3, ..., keyN
-    const keyList = Object.keys(object)
-    let keysString = ''
-    for (let key of keyList) {
-        keysString += `${key}, `
-    }
-    keysString = keysString.substring(0, keysString.lastIndexOf(',')) //remove the final comma
-    return keysString 
-}
-
-const csvValues = function(object) {
-    // return a string formatted like: key1 = value1, key2 = 'string2', ..., keyFinal = valueFinal
-    // strings will have quotes around them, numbers will be bare
-    let valuesString = ''
-    const keyList = Object.keys(object)
-    for (let key of keyList) {
-        switch(typeof object[key]) {
-            case 'number': valuesString += `${object[key]}, `; break;
-            case 'string': valuesString += `'${object[key]}',  `; break;
-        }
-    }
-    valuesString = valuesString.substring(0, valuesString.lastIndexOf(',')) //remove the final comma
-    return valuesString 
-}
-
-const removeRID = function(object) { 
-    let newReimbursement = {}
-    for (let key of Object.keys(object)) {
-        // reimbursementId is always set to 0 in body, and will be assigned automatically
-        if (key == 'reimbursementId') {continue} 
-        newReimbursement[key] = object[key] 
-    }
-    return newReimbursement 
-}
-
-export default {authenticateUser, trueIfAdmin, trueIfFinanceManger, keyValueSQL, csvKeys, csvValues, removeRID }
+export default {authenticateUser, trueIfAdmin, trueIfFinanceManger, moneyString, sanitizeReimbursement};

@@ -6,13 +6,13 @@ drop table if exists reimbursement_types;
 
 create table roles (
   roleId serial primary key,
-  roleName varchar (20)
+  role varchar (20)
 );
 
 create table users (
 	userId serial primary key,
 	userName varchar (20),
-	passwordHash varchar (64),
+	password varchar (64),
 	firstName varchar (20),
 	lastName varchar (20),
 	email varchar (30),
@@ -20,10 +20,9 @@ create table users (
 	foreign key (roleId) references roles (roleId)
 );
 
-
 create table reimbursement_types (
   typeId serial primary key, 
-  typeName varchar (10)
+  type varchar (10)
 );
 
 create table reimbursement_statuses (
@@ -39,14 +38,14 @@ create table reimbursements (
   dateResolved int,
   description varchar (30), 
   resolver int, foreign key (resolver) references users (userId), 
-  status int, foreign key (status) references reimbursement_statuses (statusId),
+  statusId int, foreign key (statusId) references reimbursement_statuses (statusId),
   typeId int, foreign key (typeId) references reimbursement_types (typeId)
 );
 
- 
-insert into roles values (1, 'admin');
-insert into roles values (2, 'finance-manager');
-insert into roles values (3, 'employee');
+  
+insert into roles (role) values ('admin');
+insert into roles (role) values ('finance-manager');
+insert into roles (role) values ('employee');
 select * from roles;
 
 insert into users values (
@@ -60,24 +59,24 @@ insert into users values (
 	'Becca', 'Adams',  'becca.boo@aol.com', 3);
 select * from users;
 
-insert into reimbursement_types (typeName) values ('Lodging');
-insert into reimbursement_types (typeName) values ('Travel'); 
-insert into reimbursement_types (typeName) values ('Food');
-insert into reimbursement_types (typeName) values ('Other');
+insert into reimbursement_types (type) values ('Lodging');
+insert into reimbursement_types (type) values ('Travel'); 
+insert into reimbursement_types (type) values ('Food');
+insert into reimbursement_types (type) values ('Other');
 select * from reimbursement_types;
 
-insert into reimbursement_statuses values (1, 'Pending');
-insert into reimbursement_statuses values (2, 'Approved');
-insert into reimbursement_statuses values (3, 'Denied');
+insert into reimbursement_statuses (status) values ('Pending');
+insert into reimbursement_statuses (status) values ('Approved');
+insert into reimbursement_statuses (status) values ('Denied');
 select * from reimbursement_statuses;
 
-insert into reimbursements (author, amount, dateSubmitted, dateResolved, description, resolver, status, typeId)
+insert into reimbursements (author, amount, dateSubmitted, dateResolved, description, resolver, statusId, typeId)
 	values (3, 300, 1562721376, 1562721476, 'airplane and luggage', 1, 2, 2);
-insert into reimbursements (author, amount, dateSubmitted, dateResolved, description, resolver, status, typeId)
+insert into reimbursements (author, amount, dateSubmitted, dateResolved, description, resolver, statusId, typeId)
 	values (2, 25, 1562720476, null, 'business lunch', 1, 1, 3);
-insert into reimbursements (author, amount, dateSubmitted, dateResolved, description, resolver, status, typeId)
+insert into reimbursements (author, amount, dateSubmitted, dateResolved, description, resolver, statusId, typeId)
 	values (3, 25, 1562711476, null, 'business lunch', 1, 1, 3);
-insert into reimbursements (author, amount, dateSubmitted, dateResolved, description, resolver, status, typeId)
+insert into reimbursements (author, amount, dateSubmitted, dateResolved, description, resolver, statusId, typeId)
 	values (1, 5000, 1562701476, 1562721400, 'spy equipment', 1, 3, 4);
 
 select * from users

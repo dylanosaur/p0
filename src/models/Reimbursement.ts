@@ -22,8 +22,9 @@ export default class Reimbursement{
     resolver: String;
     status: Number;
     type: Number;   
-    constructor(reimbursementId, author, amount, dateSubmitted, dateResolved, description, 
-                resolver, status, type) {
+    constructor(reimbursementId=undefined, author=undefined, amount=undefined, 
+        dateSubmitted=undefined, dateResolved=undefined, description=undefined, 
+        resolver=undefined, status=undefined, type=undefined) {
     this.reimbursementId = reimbursementId; // primary key
     this.author = author; // foreign key -> User, not null
     this.amount = amount; // not null
