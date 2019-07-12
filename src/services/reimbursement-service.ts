@@ -1,53 +1,54 @@
-import * as qDB from '../sql-service/queryDB'
+import db from '../sql-service/pg-connect'
 import utilities from './utilities'
+import Reimbursement from '../models/Reimbursement'
 
-export function getReimbursementsFromUserId(userId) {
-    let queryString = `select * from reimbursements where author = ${parseInt(userId)};`
-    console.log(queryString);
-    let result = qDB.queryDB(queryString)
-    return result
+export async function getReimbursementsFromUserId(userId) {
+    const queryString = `select * from reimbursements where author = $1;`
+    console.log(queryString, userId);
+    const result = await db.query(queryString, [parseInt(userId)])
+    const reimbursements: Array<Reimbursement> = [];
+    console.log(result.rows);
+    for (let value of result.rows) { 
+        console.log('pushing value', value);
+        reimbursements.push(value); }
+    return reimbursements
 }
 
-export function getReimbursementsFromStatus(status) {
-    let queryString = `select * from reimbursements where status = ${parseInt(status)};`
-    let result = qDB.queryDB(queryString)
-    return result
+export async function getReimbursementsFromStatus(status) {
+    const queryString = `select * from reimbursements where statusid = $1;`
+    const result = await db.query(queryString, [parseInt(status)]);
+    const reimbursements = [];
+    for (let value of result.rows) { reimbursements.push(value); }
+    return reimbursements
 }
 
 export async function addReimbursement(userId, body) {
     // reimbursements come with RID = 0 and will be assigned RID by postgresql table automatically
-    let newReimbursement = utilities.removeRID(body)
-    // prepare values and keys strings for sql statement
-    let valuesString = utilities.csvValues(newReimbursement)
-    let keysString = utilities.csvKeys(newReimbursement)
-    let updateString = `Insert into reimbursements (${keysString}) values (${valuesString});`
-    console.log(updateString);
-    // send update query, wait for reimbursement to be added and then query for validation
-    await qDB.queryDB(updateString);
-    // get the latest reimbursement
-    let queryString = `select * from reimbursements ORDER BY reimbursementid DESC LIMIT 1;`
-    console.log(queryString);
-    // wait for db to return latest reimbursement i.e. the added reimbursement
-    let result = await qDB.queryDB(queryString);
-    return result
+    delete body['reimbursementId'];
+    // assign any valid fields to object literal, to be converted to SQL query
+    const newReimbursement = utilities.sanitizeReimbursement(body);
+    const nKeys = Object.keys(newReimbursement).length;
+    console.log(nKeys, Object.keys(newReimbursement));
+    const formatString = utilities.moneyString(1,nKeys+1);
+    let updateString = `Insert into reimbursements (${Object.keys(newReimbursement).join(', ')}) 
+                        values (${formatString}) returning *;`;
+    console.log(updateString, Object.values(newReimbursement));
+    // send update query, passing in valid field/value pairs as argument array
+    const result = await db.query(updateString, Object.values(newReimbursement));
+    return result.rows[0]
 }
 
 
 export async function updateReimbursement(body) {
-    // do not try to update reimbursementID
-    // data is new, different object with the RID field stripped
-    let data = utilities.removeRID(body)
-    // make string of keys and values for SQL statement - numbers and strings are acceptable as value types
-    let keysValuesString = utilities.keyValueSQL(data);
-    let updateString = `UPDATE reimbursements SET ${keysValuesString} 
-                where reimbursementid = ${body['reimbursementId']};`
-    console.log(updateString);
-    // wait until DB finishes updating before querying
-    await qDB.queryDB(updateString);
-    // get updated reimbursement and echo back to server for validation
-    let queryString = `select * from reimbursements where reimbursementid = ${body['reimbursementId']};`
-    console.log(queryString);
-    // wait for db to return updated reimbursement
-    let result = await qDB.queryDB(queryString);
-    return result
+    const newReimbursement = utilities.sanitizeReimbursement(body);
+    const nKeys = Object.keys(newReimbursement).length;
+    console.log(nKeys, Object.keys(newReimbursement));
+    const formatString = utilities.moneyString(1,nKeys+1);
+    let updateString = `update reimbursements set (${Object.keys(newReimbursement).join(', ')}) 
+                        = (${formatString}) where reimbursementid = $${nKeys+1} returning *;`;
+    console.log(updateString, Object.values(newReimbursement));
+    // send update query, passing in valid field/value pairs as argument array
+    const queryParams = [...Object.values(newReimbursement), body['reimbursementId']];
+    const result = await db.query(updateString, queryParams);
+    return result.rows[0]
 }

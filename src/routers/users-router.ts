@@ -1,40 +1,40 @@
 import express, { Request, Response } from 'express';
 import utilities from '../services/utilities';
-import * as usersService from '../services/users-service'
+import * as usersService from '../services/users-service';
 
 
 const usersRouter = express.Router();
 
 // allow (only) finance manager to view current users and information 
-usersRouter.get('/', (req, res) => {
+usersRouter.get('/', async (req, res) => {
     // pull cookie data with .cookies['cookie name']
     let userCookie = req.cookies['identity']; // name of cookie with user details
-    if (utilities.trueIfFinanceManger(userCookie)) { 
-        let users = usersService.getAllUsers();
-        res.send(users) }
+    if (await utilities.trueIfFinanceManger(userCookie)) { 
+        let users = await usersService.getAllUsers();
+        res.send(users); }
     else { res.send("Invalid Credentials... you're not big DK!"); }
 })
 
 // the information in the URL /stuff/:id gets stored in req.params['id']
 // this is routing and will try to match any request id to a database id
-usersRouter.get('/:id', (req, res) => {
+usersRouter.get('/:id', async (req, res) => {
     let userCookie = req.cookies['identity']; // name of cookie with user details
-    if (!(utilities.trueIfFinanceManger(userCookie) || userCookie.userId === req.params['id'])) {
+    if (!(await utilities.trueIfFinanceManger(userCookie) || userCookie.userId === req.params['id'])) {
         res.send("Invalid Credentials... you're not that user or big DK!");
-        return
+        return;
     }
-    let matchedUser = usersService.matchUserWithUserId(req.query['id']);
+    let matchedUser = await usersService.matchUserWithUserId(req.query['id']);
     res.send(matchedUser)
 })
 
 // update sql database and return updated user information
-usersRouter.patch('/', (req, res) => {
-    if (!utilities.trueIfAdmin(req.cookies['identity'])) {
+usersRouter.patch('/', async (req, res) => {
+    if (!await utilities.trueIfAdmin(req.cookies['identity'])) {
         res.send('Invalid credentials, this incident will be reported');
-        return
+        return;
     }
-    let matchedUser = usersService.matchUserWithUserId(req.body['userId']);
-    let updatedUser = usersService.updateUser(matchedUser, req.body);
+    let matchedUser = await usersService.matchUserWithUserId(req.body['userId']);
+    let updatedUser = await usersService.updateUser(matchedUser, req.body);
     res.send(updatedUser);
 })
 
