@@ -42,21 +42,30 @@ create table reimbursements (
   typeId int, foreign key (typeId) references reimbursement_types (typeId)
 );
 
-  
 insert into roles (role) values ('admin');
 insert into roles (role) values ('finance-manager');
 insert into roles (role) values ('employee');
 select * from roles;
-
-insert into users values (
-	1, 'DAdams', 'password', 
+	
+insert into users 	(userName, password, firstName, lastName, email, roleId) values (
+	'DAdams', 'password', 
 	'Dylan', 'Adams', 'dadams10642@outlook.com', 1);
-insert into users values (	
-	2, 'DKoenig', 'moneymoney', 
+insert into users 	(userName, password, firstName, lastName, email, roleId) values (	
+	'DKoenig', 'moneymoney', 
 	'Dylan', 'Koenig', 'bigDK@gmail.com', 2);
-insert into users values ( 
-	3, 'BAdams', 'perfume', 
+insert into users 	(userName, password, firstName, lastName, email, roleId) values (
+	'BAdams', 'perfume', 
 	'Becca', 'Adams',  'becca.boo@aol.com', 3);
+insert into users 	(userName, password, firstName, lastName, email, roleId) values (
+	'SYusupov', 'russia-sucks', 
+	'Sam', 'Yusupov',  'not.a.russian.hacker@pwny.com', 3);
+insert into users 	(userName, password, firstName, lastName, email, roleId) values (
+	'DChaparro', '12345', 
+	'David', 'Chaparro',  'david.chapparo@ymail.com', 3);
+insert into users 	(userName, password, firstName, lastName, email, roleId) values (
+	'JWard', 'dragongirl', 
+	'Jon', 'Ward',  'jlward@revature.com', 3);
+
 select * from users;
 
 insert into reimbursement_types (type) values ('Lodging');
@@ -79,5 +88,5 @@ insert into reimbursements (author, amount, dateSubmitted, dateResolved, descrip
 insert into reimbursements (author, amount, dateSubmitted, dateResolved, description, resolver, statusId, typeId)
 	values (1, 5000, 1562701476, 1562721400, 'spy equipment', 1, 3, 4);
 
-select * from users
+select * from users;
 
