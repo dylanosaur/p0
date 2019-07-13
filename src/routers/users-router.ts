@@ -18,12 +18,13 @@ usersRouter.get('/', async (req, res) => {
 // the information in the URL /stuff/:id gets stored in req.params['id']
 // this is routing and will try to match any request id to a database id
 usersRouter.get('/:id', async (req, res) => {
-    let userCookie = req.cookies['identity']; // name of cookie with user details
-    if (!(await utilities.trueIfFinanceManger(userCookie) || userCookie.userId === req.params['id'])) {
+    const userCookie = req.cookies['identity']; // name of cookie with user details
+    const userId = parseInt(req.params['id']);
+    if (!(await utilities.trueIfFinanceManger(userCookie) || userCookie.userId === userId)) {
         res.send("Invalid Credentials... you're not that user or big DK!");
         return;
     }
-    let matchedUser = await usersService.matchUserWithUserId(req.query['id']);
+    let matchedUser = await usersService.matchUserWithUserId(userId);
     res.send(matchedUser)
 })
 
