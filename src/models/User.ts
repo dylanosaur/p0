@@ -8,8 +8,8 @@ class User {
     lastName;  // not null
     email; // not null
     role;  // not null
-    constructor(userId: number, username: string, password: string, firstName: string, 
-                lastName:string, email: string, role: Role) {
+    constructor(userId: number=null, username: string=null, password: string=null, firstName: string=null, 
+                lastName:string=null, email: string=null, role: Role=null) {
         this.userId = userId; // primary key
         this.username = username;  // not null, unique
         this.password = password; // not null

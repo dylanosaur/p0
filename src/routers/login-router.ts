@@ -1,10 +1,14 @@
 import express from 'express';
 import utilities from '../services/utilities';
-
+import hash from 'hash'
 const loginRouter = express.Router()
+const {sha256} = require('crypto-hash');
 // when setting cookie information on a response .coookie(cookie info) must be called before .json(body info)
 loginRouter.post('/', async (req, res) => {
-    let match = await utilities.authenticateUser(req)
+
+    // immediately hash password, all references to password will be the hashed version
+    req.body['password'] = await sha256(req.body['password']);
+    let match = await utilities.authenticateUser(req);
     if (match) {
         // create cookie for user identification
         let userCookie = {"userId": match.userid, "username": match.username, "password": match.password};

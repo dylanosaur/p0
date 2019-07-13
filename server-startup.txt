@@ -48,22 +48,22 @@ insert into roles (role) values ('employee');
 select * from roles;
 	
 insert into users 	(userName, password, firstName, lastName, email, roleId) values (
-	'DAdams', 'password', 
+	'DAdams', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 
 	'Dylan', 'Adams', 'dadams10642@outlook.com', 1);
 insert into users 	(userName, password, firstName, lastName, email, roleId) values (	
-	'DKoenig', 'moneymoney', 
+	'DKoenig', 'e61c926d5feb3b8d4de477220d7cf9f6b29f0057c8def6983975e31850d825b1', 
 	'Dylan', 'Koenig', 'bigDK@gmail.com', 2);
 insert into users 	(userName, password, firstName, lastName, email, roleId) values (
-	'BAdams', 'perfume', 
+	'BAdams', '37ecf521c8f469c92ce485da3ed4de7f257837873f92d012257308dfac63a567', 
 	'Becca', 'Adams',  'becca.boo@aol.com', 3);
 insert into users 	(userName, password, firstName, lastName, email, roleId) values (
-	'SYusupov', 'russia-sucks', 
+	'SYusupov', '1ad52a25844b4c29f667522e020933aa31c09844321d6a6be84d8c9b5c64ffe8', 
 	'Sam', 'Yusupov',  'not.a.russian.hacker@pwny.com', 3);
 insert into users 	(userName, password, firstName, lastName, email, roleId) values (
-	'DChaparro', '12345', 
+	'DChaparro', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', 
 	'David', 'Chaparro',  'david.chapparo@ymail.com', 3);
 insert into users 	(userName, password, firstName, lastName, email, roleId) values (
-	'JWard', 'dragongirl', 
+	'JWard', '6f8127562e0a4ca6cbe26890cbb3388850b1408fe307162254cab74587af93d5', 
 	'Jon', 'Ward',  'jlward@revature.com', 3);
 
 select * from users;
