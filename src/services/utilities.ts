@@ -31,9 +31,10 @@ let trueIfAdmin = async function(userCookie){
     console.log(queryString);
     let admin = await db.query(queryString);
     // could add QC check here
-    admin = admin[0];
+    if (!admin.rows.length) { return false; }
+    admin = admin.rows[0];
     console.log('found admin: ', admin);
-    return (userCookie.userId == admin.userId && userCookie.password == admin.password);
+    return (userCookie.userId == admin.userid && userCookie.password == admin.password);
 }
 
 
