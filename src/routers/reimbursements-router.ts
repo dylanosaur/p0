@@ -1,69 +1,97 @@
 import express, { Request, Response } from 'express';
 import utilities from '../services/utilities';
 import User from '../models/User'
-import db from '../models/db'
-
-
-let users = db.users;
-let refunds = db.refunds;
-let financeManagerUser = users[1];
-let adminUser = users[0];
 import * as reimbursementService from '../services/reimbursement-service'
 
 const refundRouter = express.Router();
 
 // find reimbursements by user
 refundRouter.get('/author/userId:userId', async (req, res) => {
-    let userCookie = req.cookies['identity']; // name of cookie with user details
+    let userCookie = req.cookies && req.cookies['identity']; // name of cookie with user details
+    if (!userCookie) { 
+        res.status(400).send({error: 'invalid cookie'});
+        return;
+    }
     const isFinanceManager = await utilities.trueIfFinanceManger(userCookie);
-    const isCurrentUser = (userCookie.userId === parseInt(req.params['userId']));
-    console.log(userCookie, req.params )
+    const userId = req.params && parseInt(req.params['userId']);
+    if (!userId) { 
+        res.status(400).send({error: `invalid userId field given: ${req.params['userId']}`});
+        return;
+    }
+    const isCurrentUser = (userCookie.userId === userId);
+    console.log(userCookie, req.params)
     console.log('', isFinanceManager, isCurrentUser)
     if (!(isFinanceManager || isCurrentUser)) {
-        res.send("Invalid Credentials... you're not that user or big DK!");
+        res.status(400).send("Invalid Credentials... you're not that user or big DK!");
         return
     }
     // similiar filter operation to matchUserAndPassword but with userId
-    console.log('using userId', userCookie.userId, req.params['userId']);
-    let refunds = await reimbursementService.getReimbursementsFromUserId(req.params['userId'])
+    console.log('using userId', userCookie.userId, userId);
+    let refunds = await reimbursementService.getReimbursementsFromUserId(userId)
     if (refunds.length > 0) { res.status(200).send(refunds); }
-    else { res.sendStatus(500); }
+    else { res.status(200).send({'msg':'no reimbursements found for that user'}); }
 })
 
 // find reimbursements by statusId
 refundRouter.get('/status/:statusId', async (req, res) => {
-    let userCookie = req.cookies['identity']; // name of cookie with user details
+    let userCookie = req.cookies && req.cookies['identity']; // name of cookie with user details
+    if (!userCookie) { 
+        res.status(400).send({error: 'invalid cookie'});
+        return;
+    }
+    const statusId = req.params && parseInt(req.params['statusId']);
+    if (!statusId) { 
+        res.status(400).send({error: `Invalid statusId: ${statusId}`});
+        return;
+    }
     const isFinanceManager = await utilities.trueIfFinanceManger(userCookie);
     if (!isFinanceManager) {
         res.send("Invalid Credentials... you're not that user or big DK!");
         return
     }
     // similiar filter operation to matchUserAndPassword but with userId
-    let refunds = await reimbursementService.getReimbursementsFromStatus(req.params['statusId'])
-    res.send(refunds)
+    let refunds = await reimbursementService.getReimbursementsFromStatus(statusId)
+    if (refunds.length) { res.status(200).send(refunds); }
+    else { res.status(200).send('No refunds are found with that status')}
 })
 
 
 refundRouter.post('/', async (req, res) => {
-    let userCookie = req.cookies['identity'];
+    let userCookie = req.cookies && req.cookies['identity'];
+    if (!userCookie) { 
+        res.status(400).send({error: 'invalid cookie'});
+        return;
+    }
     if (req.body['reimbursementId'] !== 0) {
         res.status(201).send('Incorrect reimbursementId, please set to 0');
         return;
     }
-    let reimbursement = await reimbursementService.addReimbursement(userCookie.userId, req.body);
-    res.send(reimbursement); //users submit reimb requests here
+    try { 
+        let reimbursement = await reimbursementService.addReimbursement(userCookie.userId, req.body);
+        res.status(200).send(reimbursement); //users submit reimb requests here
+    } catch (error) { 
+        res.status(400).send({error: 'Database request error: '+error});
+    }
 })
 
 
 refundRouter.patch('/', async (req, res) => {
-    let userCookie = req.cookies['identity']; // name of cookie with user details
+    let userCookie = req.cookies && req.cookies['identity']; // name of cookie with user details
+    if (!userCookie) { 
+        res.status(400).send({error: 'invalid cookie'});
+        return;
+    }
     if (!(utilities.trueIfFinanceManger(userCookie))) {
         res.send("Invalid Credentials... you're not that user or big DK!");
         return
     }
-    let reimbursement = await reimbursementService.updateReimbursement(req.body);
-    if (reimbursement) { res.send(reimbursement) }
-    else { res.send('That reimbursementId does not match any in the database') }
+    try { 
+        let reimbursement = await reimbursementService.updateReimbursement(req.body);
+        if (reimbursement) { res.send(reimbursement) }
+        else { res.send(`The reimbursementId ${parseInt(req.body['reimbursementId'])} does not match any in the database`) }
+    } catch (error) { 
+        res.status(400).send({error: 'Database request error: '+error})
+    }
 })
 
 export default refundRouter

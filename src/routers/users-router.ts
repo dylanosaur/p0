@@ -9,6 +9,10 @@ const usersRouter = express.Router();
 usersRouter.get('/', async (req, res) => {
     // pull cookie data with .cookies['cookie name']
     let userCookie = req.cookies['identity']; // name of cookie with user details
+    if (!userCookie) { 
+        res.status(400).send({error: 'invalid cookie'});
+        return;
+    }
     if (await utilities.trueIfFinanceManger(userCookie)) { 
         let users = await usersService.getAllUsers();
         res.send(users); 
@@ -19,7 +23,15 @@ usersRouter.get('/', async (req, res) => {
 // this is routing and will try to match any request id to a database id
 usersRouter.get('/:id', async (req, res) => {
     const userCookie = req.cookies['identity']; // name of cookie with user details
+    if (!userCookie) { 
+        res.status(400).send({error: 'invalid cookie'});
+        return;
+    }
     const userId = parseInt(req.params['id']);
+    if (!userId) { 
+        res.status(400).send({error: `invalid id given: ${userId}`});
+        return;
+    }
     if (!(await utilities.trueIfFinanceManger(userCookie) || userCookie.userId === userId)) {
         res.send("Invalid Credentials... you're not that user or big DK!");
         return;
@@ -34,7 +46,12 @@ usersRouter.patch('/', async (req, res) => {
         res.send('Invalid credentials, this incident will be reported');
         return;
     }
-    let matchedUser = await usersService.matchUserWithUserId(req.body['userId']);
+    const userId = parseInt(req.body['userId']);
+    if (!userId) { 
+        res.status(400).send({error: `invalid userId given: ${userId}`});
+        return;
+    }
+    let matchedUser = await usersService.matchUserWithUserId(userId);
     let updatedUser = await usersService.updateUser(matchedUser, req.body);
     res.send(updatedUser);
 })
