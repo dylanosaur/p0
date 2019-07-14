@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 // define socket port channel for app/server communication and start listening
-const port = 3000;
+const port = 3005;
 const port_handler = app.listen(port, () => console.log(`ERS app listening on port ${port}!`));
 
 app.use('/login', loginRouter);

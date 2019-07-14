@@ -11,8 +11,8 @@ usersRouter.get('/', async (req, res) => {
     let userCookie = req.cookies['identity']; // name of cookie with user details
     if (await utilities.trueIfFinanceManger(userCookie)) { 
         let users = await usersService.getAllUsers();
-        res.send(users); }
-    else { res.send("Invalid Credentials... you're not big DK!"); }
+        res.send(users); 
+    } else { res.send("Invalid Credentials... you're not big DK!"); }
 })
 
 // the information in the URL /stuff/:id gets stored in req.params['id']
