@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import utilities from '../services/utilities';
 import * as usersService from '../services/users-service';
+import db from '../sql-service/pg-connect';
 
 
 const usersRouter = express.Router();
@@ -55,6 +56,5 @@ usersRouter.patch('/', async (req, res) => {
     let updatedUser = await usersService.updateUser(matchedUser, req.body);
     res.send(updatedUser);
 })
-
 
 export default usersRouter;
