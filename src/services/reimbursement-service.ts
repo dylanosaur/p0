@@ -3,7 +3,7 @@ import utilities from './utilities'
 import Reimbursement from '../models/Reimbursement'
 
 export async function getReimbursementsFromUserId(userId) {
-    const queryString = `select * from reimbursements where author = $1;`
+    const queryString = `select * from reimbursements where author = $1 order by datesubmitted;`
     console.log(queryString, userId);
     const result = await db.query(queryString, [parseInt(userId)])
     const reimbursements: Array<Reimbursement> = [];
@@ -15,7 +15,7 @@ export async function getReimbursementsFromUserId(userId) {
 }
 
 export async function getReimbursementsFromStatus(status) {
-    const queryString = `select * from reimbursements where statusid = $1;`
+    const queryString = `select * from reimbursements where statusid = $1 order by datesubmitted;`
     const result = await db.query(queryString, [parseInt(status)]);
     const reimbursements = [];
     for (let value of result.rows) { reimbursements.push(value); }
