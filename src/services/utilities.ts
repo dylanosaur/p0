@@ -23,6 +23,8 @@ let authenticateUser = async function(req) {
 let trueIfFinanceManger = async function(userCookie) {
     const queryString = `select (roleid) from users where username = $1 and password = $2;`
     console.log(queryString);
+    const username = userCookie && userCookie.username;
+    const password = userCookie && userCookie.password;
     const result = await db.query(queryString, [userCookie.username, userCookie.password]);
     const userRole = result.rows[0].roleid;
     console.log('userRole is found to be:', userRole, typeof(userRole) );
