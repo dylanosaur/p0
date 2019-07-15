@@ -8,8 +8,8 @@ const usersRouter = express.Router();
 
 // allow (only) finance manager to view current users and information 
 usersRouter.get('/', async (req, res) => {
-    // pull cookie data with .cookies['cookie name']
-    let userCookie = req.cookies['identity']; // name of cookie with user details
+    // pull cookie data with .session['cookie name']
+    let userCookie = req.session['identity']; // name of cookie with user details
     if (!userCookie) { 
         res.status(400).send({error: 'invalid cookie'});
         return;
@@ -23,7 +23,7 @@ usersRouter.get('/', async (req, res) => {
 // the information in the URL /stuff/:id gets stored in req.params['id']
 // this is routing and will try to match any request id to a database id
 usersRouter.get('/:id', async (req, res) => {
-    const userCookie = req.cookies['identity']; // name of cookie with user details
+    const userCookie = req.session['identity']; // name of cookie with user details
     if (!userCookie) { 
         res.status(400).send({error: 'invalid cookie'});
         return;
@@ -43,8 +43,8 @@ usersRouter.get('/:id', async (req, res) => {
 
 // update sql database and return updated user information
 usersRouter.patch('/', async (req, res) => {
-    console.log(req.cookies['identity']);
-    if (!await utilities.trueIfAdmin(req.cookies['identity'])) {
+    console.log(req.session['identity']);
+    if (!await utilities.trueIfAdmin(req.session['identity'])) {
         res.send('Invalid credentials, this incident will be reported');
         return;
     }

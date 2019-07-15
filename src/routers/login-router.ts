@@ -6,6 +6,7 @@ const {sha256} = require('crypto-hash');
 // when setting cookie information on a response .coookie(cookie info) must be called before .json(body info)
 loginRouter.post('/', async (req, res) => {
 
+    console.log('current sessions data is', req.session)
     // immediately hash password, all references to password will be the hashed version
     if (!(req.body['password'] && req.body['username'])){ 
         res.status(400).send({error: `username and/or password not found in request`})
@@ -18,7 +19,7 @@ loginRouter.post('/', async (req, res) => {
         let userCookie = {"userId": match.userid, "username": match.username, "password": match.password};
         console.log('setting cookie to', userCookie);
         // set response cookie as def above and response body to user information
-        res.cookie('identity', userCookie);
+        req.session.identity = userCookie
         const result = await utilities.authenticateUser(req)
         res.json(result);
         // response ready to send

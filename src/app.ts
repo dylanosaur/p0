@@ -1,15 +1,19 @@
 import express from "express";
 import bodyParser = require("body-parser");
-import cookieParser = require("cookie-parser");
 import usersRouter from './routers/users-router'
 import loginRouter from './routers/login-router'
 import reimbursementsRouter from './routers/reimbursements-router'
 import db from './sql-service/pg-connect'
+import session from 'express-session'
+
 
 const app = express();
+app.use(session({
+    resave: false,
+    secret: 'my-secret',
+}));
 
 //Enable express to use body-parser and cookie-parser as middle-ware
-app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.json());
 

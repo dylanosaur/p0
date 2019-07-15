@@ -7,7 +7,7 @@ const refundRouter = express.Router();
 
 // find reimbursements by user
 refundRouter.get('/author/userId:userId', async (req, res) => {
-    let userCookie = req.cookies && req.cookies['identity']; // name of cookie with user details
+    let userCookie = req.session['identity']; // name of cookie with user details
     if (!userCookie) { 
         res.status(400).send({error: 'invalid cookie'});
         return;
@@ -34,7 +34,7 @@ refundRouter.get('/author/userId:userId', async (req, res) => {
 
 // find reimbursements by statusId
 refundRouter.get('/status/:statusId', async (req, res) => {
-    let userCookie = req.cookies && req.cookies['identity']; // name of cookie with user details
+    let userCookie = req.session['identity']; // name of cookie with user details
     if (!userCookie) { 
         res.status(400).send({error: 'invalid cookie'});
         return;
@@ -57,7 +57,7 @@ refundRouter.get('/status/:statusId', async (req, res) => {
 
 
 refundRouter.post('/', async (req, res) => {
-    let userCookie = req.cookies && req.cookies['identity'];
+    let userCookie = req.session['identity'];
     if (!userCookie) { 
         res.status(400).send({error: 'invalid cookie'});
         return;
@@ -76,7 +76,7 @@ refundRouter.post('/', async (req, res) => {
 
 
 refundRouter.patch('/', async (req, res) => {
-    let userCookie = req.cookies && req.cookies['identity']; // name of cookie with user details
+    let userCookie = req.session['identity']; // name of cookie with user details
     if (!userCookie) { 
         res.status(400).send({error: 'invalid cookie'});
         return;
