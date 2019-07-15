@@ -51,7 +51,6 @@ const sanitizeReimbursement = function(obj) {
     const newReimbursement = {}; 
     for (let key of Object.keys(nullReimbursement)) {
         if (Object.keys(obj).includes(key)) { 
-            if (key == 'reimbursementId') continue
             newReimbursement[key] = obj[key];
         }
     }

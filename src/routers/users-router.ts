@@ -54,8 +54,12 @@ usersRouter.patch('/', async (req, res) => {
         return;
     }
     let matchedUser = await usersService.matchUserWithUserId(userId);
-    let updatedUser = await usersService.updateUser(userId, req.body);
-    res.send(updatedUser);
+    try { 
+        let updatedUser = await usersService.updateUser(userId, req.body);
+        res.send(updatedUser);
+    } catch (error) { 
+        res.status(400).send('database failed to update with error: '+error);
+    }
 })
 
 export default usersRouter;
