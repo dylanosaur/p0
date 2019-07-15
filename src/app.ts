@@ -5,7 +5,7 @@ import loginRouter from './routers/login-router'
 import reimbursementsRouter from './routers/reimbursements-router'
 import db from './sql-service/pg-connect'
 import session from 'express-session'
-
+import connect from 'connect'
 
 const app = express();
 app.use(session({
@@ -16,6 +16,7 @@ app.use(session({
 //Enable express to use body-parser and cookie-parser as middle-ware
 app.use(bodyParser.json());
 app.use(express.json());
+app.use(connect())
 
 // define socket port channel for app/server communication and start listening
 const port = 3000;

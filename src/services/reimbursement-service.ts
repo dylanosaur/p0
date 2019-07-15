@@ -10,7 +10,7 @@ export async function getReimbursementsFromUserId(userId) {
     console.log(result.rows);
     for (let value of result.rows) {
         reimbursements.push(new Reimbursement())
-        const currentReimbursement = reimbursements[reimbursements.length + 1]
+        const currentReimbursement = reimbursements[reimbursements.length - 1]
         for (let key of Object.keys(currentReimbursement)) { currentReimbursement[key] = value[key.toLowerCase()]; }
         console.log('pushing value', currentReimbursement);
     }
@@ -23,7 +23,7 @@ export async function getReimbursementsFromStatus(status) {
     const reimbursements = [];
     for (let value of result.rows) {
         reimbursements.push(new Reimbursement())
-        const currentReimbursement = reimbursements[reimbursements.length + 1]
+        const currentReimbursement = reimbursements[reimbursements.length - 1]
         for (let key of Object.keys(currentReimbursement)) { currentReimbursement[key] = value[key.toLowerCase()]; }
         console.log('pushing value', currentReimbursement);
     }
