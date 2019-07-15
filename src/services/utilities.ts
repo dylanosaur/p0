@@ -27,7 +27,7 @@ let trueIfFinanceManger = async function(userCookie) {
 }
 
 let trueIfAdmin = async function(userCookie){
-    let queryString = `select (username, password) from users where roleid = 1;`
+    let queryString = `select * from users where roleid = 1;`
     console.log(queryString);
     let admin = await db.query(queryString);
     // could add QC check here
@@ -58,4 +58,4 @@ const sanitizeReimbursement = function(obj) {
     return newReimbursement
 }
 
-export default {authenticateUser, trueIfAdmin, trueIfFinanceManger, moneyString, sanitizeReimbursement};
+export default {authenticateUser, trueIfAdmin, trueIfFinanceManger, moneyString, sanitizeReimbursement}

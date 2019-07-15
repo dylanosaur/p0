@@ -24,12 +24,12 @@ export async function updateUser(userId, body): Promise<User> {
         }
     }
     const nKeys = Object.keys(updateUser).length;
-    console.log(nKeys, Object.keys(updateUser));
+    console.log('updateUser inputs', nKeys, Object.keys(updateUser), userId);
     const formatString = utilities.moneyString(1,nKeys+1);
     const updateString = `update users set (${Object.keys(updateUser).join(', ')}) 
                         = (${formatString}) where userid = $${nKeys+1} returning *;`;
     console.log(updateString)
-    const userResults = await db.query(updateString, userId);
+    const userResults = await db.query(updateString, [...Object.values(updateUser), userId]);
     const userData = userResults.rows[0];
     const updatedUser = new User();
     // read in all of the properties on a single user to User typed objected

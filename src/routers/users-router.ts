@@ -43,6 +43,7 @@ usersRouter.get('/:id', async (req, res) => {
 
 // update sql database and return updated user information
 usersRouter.patch('/', async (req, res) => {
+    console.log(req.cookies['identity']);
     if (!await utilities.trueIfAdmin(req.cookies['identity'])) {
         res.send('Invalid credentials, this incident will be reported');
         return;
@@ -53,7 +54,7 @@ usersRouter.patch('/', async (req, res) => {
         return;
     }
     let matchedUser = await usersService.matchUserWithUserId(userId);
-    let updatedUser = await usersService.updateUser(matchedUser, req.body);
+    let updatedUser = await usersService.updateUser(userId, req.body);
     res.send(updatedUser);
 })
 
