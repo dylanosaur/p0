@@ -11,32 +11,32 @@ create table roles (
 
 create table users (
 	userId serial primary key,
-	userName varchar (20),
-	password varchar (64),
-	firstName varchar (20),
-	lastName varchar (20),
-	email varchar (30),
-	roleId int, 
+	userName varchar (20) not null,
+	password varchar (64) not null,
+	firstName varchar (20) not null,
+	lastName varchar (20) not null,
+	email varchar (30) not null,
+	roleId int not null, 
 	foreign key (roleId) references roles (roleId)
 );
 
 create table reimbursement_types (
   typeId serial primary key, 
-  type varchar (10)
+  type varchar (10) not null
 );
 
 create table reimbursement_statuses (
   statusId serial primary key, 
-  status varchar (10)
+  status varchar (10) not null
 );
 
 create table reimbursements ( 
   reimbursementId serial primary key,
-  author int,  foreign key (author) references users (userId),  
-  amount float,
-  dateSubmitted int, 
+  author int not null,  foreign key (author) references users (userId),  
+  amount float not null,
+  dateSubmitted int not null, 
   dateResolved int,
-  description varchar (30), 
+  description varchar (30) not null, 
   resolver int, foreign key (resolver) references users (userId), 
   statusId int, foreign key (statusId) references reimbursement_statuses (statusId),
   typeId int, foreign key (typeId) references reimbursement_types (typeId)
