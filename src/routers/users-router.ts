@@ -43,7 +43,7 @@ usersRouter.get('/:id', async (req, res) => {
 
 // update sql database and return updated user information
 usersRouter.patch('/', async (req, res) => {
-    console.log(req.session['identity']);
+    console.log('request session:', req.session['identity']);
     if (!await utilities.trueIfAdmin(req.session['identity'])) {
         res.send('Invalid credentials, this incident will be reported');
         return;

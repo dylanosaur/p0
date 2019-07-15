@@ -31,13 +31,15 @@ let trueIfFinanceManger = async function(userCookie) {
 
 let trueIfAdmin = async function(userCookie){
     let queryString = `select * from users where roleid = 1;`
+    const userId = userCookie && userCookie.userId;
+    const password = userCookie && userCookie.password;
     console.log(queryString);
     let admin = await db.query(queryString);
     // could add QC check here
     if (!admin.rows.length) { return false; }
     admin = admin.rows[0];
     console.log('found admin: ', admin);
-    return (userCookie.userId == admin.userid && userCookie.password == admin.password);
+    return (userId == admin.userid && password == admin.password);
 }
 
 
