@@ -63,7 +63,7 @@ refundRouter.post('/', async (req, res) => {
         return;
     }
     if (req.body['reimbursementId'] !== 0) {
-        res.status(201).send('Incorrect reimbursementId, please set to 0');
+        res.status(400).send('Incorrect reimbursementId, please set to 0');
         return;
     }
     try { 

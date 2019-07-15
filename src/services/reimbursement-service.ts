@@ -26,7 +26,7 @@ export async function addReimbursement(userId, body) {
     // reimbursements come with RID = 0 and will be assigned RID by postgresql table automatically
     delete body['reimbursementId'];
     // assign any valid fields to object literal, to be converted to SQL query
-    const newReimbursement = utilities.sanitizeReimbursement(body);
+    const newReimbursement = utilities.sanitizeReimbursement(body, true);
     const nKeys = Object.keys(newReimbursement).length;
     console.log(nKeys, Object.keys(newReimbursement));
     const formatString = utilities.moneyString(1,nKeys+1);

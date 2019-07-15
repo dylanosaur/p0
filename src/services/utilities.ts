@@ -44,13 +44,14 @@ const moneyString = function (a:number, b:number) {
     return s.join(', ');
 }
 
-const sanitizeReimbursement = function(obj) { 
+const sanitizeReimbursement = function(obj, removeId=false) { 
     const nullReimbursement = new Reimbursement();
     console.log(Object.keys(nullReimbursement), Object.keys(obj));
     // ok it's not actually actually a new reimbursement but will have a subset of reimbursement fields
     const newReimbursement = {}; 
     for (let key of Object.keys(nullReimbursement)) {
         if (Object.keys(obj).includes(key)) { 
+            if (removeId && key==='reimbursementId') {continue;}
             newReimbursement[key] = obj[key];
         }
     }
