@@ -47,6 +47,7 @@ export async function getAllUsers(): Promise<Array<User>> {
         users.push(new User());
         let currentUser = users[users.length-1]
         // read in all of the properties on a single user to User typed objected
+        delete currentUser.password;
         for (let key of Object.keys(currentUser)) { currentUser[key] = user[key.toLowerCase()]; }
     }
     return users;

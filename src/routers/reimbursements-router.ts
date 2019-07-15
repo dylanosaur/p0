@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import utilities from '../services/utilities';
-import User from '../models/User'
+import Reimbursement from '../models/Reimbursement'
 import * as reimbursementService from '../services/reimbursement-service'
 
 const refundRouter = express.Router();
@@ -27,7 +27,7 @@ refundRouter.get('/author/userId:userId', async (req, res) => {
     }
     // similiar filter operation to matchUserAndPassword but with userId
     console.log('using userId', userCookie.userId, userId);
-    let refunds = await reimbursementService.getReimbursementsFromUserId(userId)
+    let refunds: Array<Reimbursement> = await reimbursementService.getReimbursementsFromUserId(userId)
     if (refunds.length > 0) { res.status(200).send(refunds); }
     else { res.status(200).send({'msg':'no reimbursements found for that user'}); }
 })
@@ -50,7 +50,7 @@ refundRouter.get('/status/:statusId', async (req, res) => {
         return
     }
     // similiar filter operation to matchUserAndPassword but with userId
-    let refunds = await reimbursementService.getReimbursementsFromStatus(statusId)
+    let refunds: Array<Reimbursement> = await reimbursementService.getReimbursementsFromStatus(statusId)
     if (refunds.length) { res.status(200).send(refunds); }
     else { res.status(200).send('No refunds are found with that status')}
 })
@@ -67,7 +67,7 @@ refundRouter.post('/', async (req, res) => {
         return;
     }
     try { 
-        let reimbursement = await reimbursementService.addReimbursement(userCookie.userId, req.body);
+        let reimbursement: Reimbursement = await reimbursementService.addReimbursement(userCookie.userId, req.body);
         res.status(200).send(reimbursement); //users submit reimb requests here
     } catch (error) { 
         res.status(400).send({error: 'Database request error: '+error});
@@ -86,7 +86,7 @@ refundRouter.patch('/', async (req, res) => {
         return
     }
     try { 
-        let reimbursement = await reimbursementService.updateReimbursement(req.body);
+        let reimbursement: Reimbursement = await reimbursementService.updateReimbursement(req.body);
         if (reimbursement) { res.send(reimbursement) }
         else { res.send(`The reimbursementId ${parseInt(req.body['reimbursementId'])} does not match any in the database`) }
     } catch (error) { 

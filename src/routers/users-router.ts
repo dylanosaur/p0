@@ -1,8 +1,7 @@
 import express, { Request, Response } from 'express';
 import utilities from '../services/utilities';
 import * as usersService from '../services/users-service';
-import db from '../sql-service/pg-connect';
-
+import User from '../models/User'
 
 const usersRouter = express.Router();
 
@@ -15,7 +14,7 @@ usersRouter.get('/', async (req, res) => {
         return;
     }
     if (await utilities.trueIfFinanceManger(userCookie)) { 
-        let users = await usersService.getAllUsers();
+        let users:Array<User> = await usersService.getAllUsers();
         res.send(users); 
     } else { res.send("Invalid Credentials... you're not big DK!"); }
 })
@@ -37,7 +36,8 @@ usersRouter.get('/:id', async (req, res) => {
         res.send("Invalid Credentials... you're not that user or big DK!");
         return;
     }
-    let matchedUser = await usersService.matchUserWithUserId(userId);
+    let matchedUser: User = await usersService.matchUserWithUserId(userId);
+    delete matchedUser.password;
     res.send(matchedUser)
 })
 
@@ -53,9 +53,9 @@ usersRouter.patch('/', async (req, res) => {
         res.status(400).send({error: `invalid userId given: ${userId}`});
         return;
     }
-    let matchedUser = await usersService.matchUserWithUserId(userId);
     try { 
-        let updatedUser = await usersService.updateUser(userId, req.body);
+        let updatedUser: User = await usersService.updateUser(userId, req.body);
+        delete updatedUser.password
         res.send(updatedUser);
     } catch (error) { 
         res.status(400).send('database failed to update with error: '+error);

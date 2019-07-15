@@ -20,11 +20,11 @@ export default class Reimbursement{
     dateResolved: String;
     description: String;
     resolver: String;
-    status: Number;
-    type: Number;   
+    statusId: Number;
+    typeId: Number;   
     constructor(reimbursementId=undefined, author=undefined, amount=undefined, 
         dateSubmitted=undefined, dateResolved=undefined, description=undefined, 
-        resolver=undefined, status=undefined, type=undefined) {
+        resolver=undefined, statusId=undefined, typeId=undefined) {
     this.reimbursementId = reimbursementId; // primary key
     this.author = author; // foreign key -> User, not null
     this.amount = amount; // not null
@@ -32,7 +32,7 @@ export default class Reimbursement{
     this.dateResolved = dateResolved;
     this.description = description; // not null
     this.resolver = resolver; // foreign key -> User
-    this.status = status; // foreign ey -> ReimbursementStatus, not null
-    this.type = type; // foreign key -> ReimbursementType
+    this.statusId = statusId; // foreign ey -> ReimbursementStatus, not null
+    this.typeId = typeId; // foreign key -> ReimbursementType
     }
 }

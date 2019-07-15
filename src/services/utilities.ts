@@ -1,6 +1,7 @@
 
 import Reimbursement from '../models/Reimbursement'
 import db from '../sql-service/pg-connect'
+import User from '../models/User';
 
 // check username: password combination against lookup table
 let authenticateUser = async function(req) {
@@ -9,9 +10,11 @@ let authenticateUser = async function(req) {
     let queryString = `select * from users where username = $1 and password = $2;`;
     console.log(queryString);
     const matchedUser = await db.query(queryString, [req.body.username, req.body.password]);
+    const user = new User();
     const userInfo = matchedUser.rows[0];
-    console.log('found users:', userInfo); // DEBUG
-    return userInfo;
+    for (let key of Object.keys(user)) { user[key] = userInfo[key.toLowerCase()]}
+    console.log('found users:', user); // DEBUG
+    return user;
 }
 
 
