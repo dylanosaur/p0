@@ -11,7 +11,7 @@ create table roles (
 
 create table users (
 	userId serial primary key,
-	userName varchar (20) not null,
+	userName varchar (20) not null unique,
 	password varchar (64) not null,
 	firstName varchar (20) not null,
 	lastName varchar (20) not null,

@@ -36,7 +36,7 @@ export async function updateReimbursement(body) {
     const currentReimbursementResults = await db.query('select * from reimbursements where reimbursementid =$1', [reimbursementId])
     const currentReimbursement = currentReimbursementResults.rows[0];
     // assign any valid fields to object literal, to be converted to SQL query
-    const updates = utilities.sanitizeReimbursement(body);
+    const updates = utilities.sanitizeObject(body, false, 'Reimbursement');
     const newReimbursement = {...currentReimbursement, ...utilities.keysToLowerCase(updates)}
     delete newReimbursement.dateresolved;
     let updateString = `update reimbursements set
@@ -56,7 +56,7 @@ export async function updateReimbursement(body) {
 export async function addReimbursement(body) {
     // reimbursements come with RID = 0 and will be assigned RID by postgresql table automatically
     // assign any valid fields to object literal, to be converted to SQL query
-    const newRMBT = utilities.sanitizeReimbursement(body, true);
+    const newRMBT = utilities.sanitizeObject(body, true, 'Reimbursement');
     let updateString = `Insert into reimbursements 
                         (author, amount, datesubmitted, dateresolved, 
                         description, resolver, statusid, typeid) values 

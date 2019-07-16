@@ -43,18 +43,22 @@ let trueIfAdmin = async function(userCookie){
     return (userId == admin.userid && password == admin.password);
 }
 
-const sanitizeReimbursement = function(obj, removeId=false) { 
-    const newReimbursement = new Reimbursement();
-    console.log(Object.keys(newReimbursement), Object.keys(obj));
+const sanitizeObject = function(obj, removeId=false, myType='Reimbursement') { 
+    let newObj;
+    switch (myType) {
+        case 'Reimbursement': newObj = new Reimbursement(); break;
+        case 'User': newObj = new User(); break;
+    }
+    console.log(Object.keys(newObj), Object.keys(obj));
     // remove fields that are not lowercase/samecase versions of valid fields on reimbursement objects
-    for (let key of Object.keys(newReimbursement)) {
+    for (let key of Object.keys(newObj)) {
         if (Object.keys(obj).includes(key)) { 
             if (removeId && key==='reimbursementId') {continue;}
-            newReimbursement[key] = obj[key];
+            newObj[key] = obj[key];
         }
-        if (!newReimbursement[key]) { delete newReimbursement[key]; }
+        if (!newObj[key]) { delete newObj[key]; }
     }
-    return newReimbursement
+    return newObj
 }
 
 const keysToLowerCase = function(myObj){
@@ -63,4 +67,4 @@ const keysToLowerCase = function(myObj){
     return newObj
 }
 
-export default {authenticateUser, trueIfAdmin, trueIfFinanceManger, sanitizeReimbursement, keysToLowerCase}
+export default {authenticateUser, trueIfAdmin, trueIfFinanceManger, sanitizeObject, keysToLowerCase}

@@ -13,26 +13,20 @@ export async function matchUserWithUserId(userId): Promise<User> {
 }
 
 export async function updateUser(userId, body): Promise<User> {
-    const nullUser = new User();
-    const updateUser = {}
     // loop over keys in User object for possible update-able keys
-    for (let key of Object.keys(body)) {
-        // if one of those keys is present in the body of the request, read it into updateUser
-        // this is sanitization / QC on the information present in the request body
-        if (Object.keys(nullUser).includes(key)) { 
-            updateUser[key] = body[key]; 
-        }
-    }
-    const nKeys = Object.keys(updateUser).length;
-    console.log('updateUser inputs', nKeys, Object.keys(updateUser), userId);
-    const formatString = utilities.moneyString(1,nKeys+1);
-    const updateString = `update users set (${Object.keys(updateUser).join(', ')}) 
-                        = (${formatString}) where userid = $${nKeys+1} returning *;`;
-    console.log(updateString)
-    const userResults = await db.query(updateString, [...Object.values(updateUser), userId]);
+    const currentUser = await db.query('select * from users where userid = $1', [userId]);
+    const updates = utilities.sanitizeObject(body, false, 'User')
+    console.log(currentUser.rows[0], utilities.keysToLowerCase(updates))
+    const updatedUserSQL = {...currentUser.rows[0], ...utilities.keysToLowerCase(updates) }
+    delete updatedUserSQL.userid;
+    const updateString = `update users set 
+                        (username, password, firstName, 
+                        lastName, email, roleId) =
+                        ($1, $2, $3, $4, $5, $6) where userid = $7 returning *`
+    const userResults = await db.query(updateString, [...Object.values(updatedUserSQL), userId]);
     const userData = userResults.rows[0];
-    const updatedUser = new User();
     // read in all of the properties on a single user to User typed objected
+    const updatedUser = new User;
     for (let key of Object.keys(updatedUser)) { updatedUser[key] = userData[key.toLowerCase()]; }
     return updatedUser
 }
