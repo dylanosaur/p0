@@ -5,7 +5,6 @@ import loginRouter from './routers/login-router'
 import reimbursementsRouter from './routers/reimbursements-router'
 import db from './sql-service/pg-connect'
 import session from 'express-session'
-import connect from 'connect'
 
 const app = express();
 app.use(session({
