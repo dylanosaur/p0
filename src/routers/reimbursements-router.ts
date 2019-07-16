@@ -67,7 +67,7 @@ refundRouter.post('/', async (req, res) => {
         return;
     }
     try { 
-        let reimbursement: Reimbursement = await reimbursementService.addReimbursement(userCookie.userId, req.body);
+        let reimbursement: Reimbursement = await reimbursementService.addReimbursement(req.body);
         res.status(200).send(reimbursement); //users submit reimb requests here
     } catch (error) { 
         res.status(400).send({error: 'Database request error: '+error});

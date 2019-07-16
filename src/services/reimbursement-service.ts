@@ -30,16 +30,20 @@ export async function getReimbursementsFromStatus(status) {
     return reimbursements
 }
 
-export async function addReimbursement(userId, body) {
+export async function updateReimbursement(body) {
     // reimbursements come with RID = 0 and will be assigned RID by postgresql table automatically
-    delete body['reimbursementId'];
+    const reimbursementId = parseInt(body['reimbursementId'])
+    const currentReimbursementResults = await db.query('select * from reimbursements where reimbursementid =$1', [reimbursementId])
+    const currentReimbursement = currentReimbursementResults.rows[0];
     // assign any valid fields to object literal, to be converted to SQL query
-    const newReimbursement = utilities.sanitizeReimbursement(body, true);
-    const nKeys = Object.keys(newReimbursement).length;
-    console.log(nKeys, Object.keys(newReimbursement));
-    const formatString = utilities.moneyString(1,nKeys+1);
-    let updateString = `Insert into reimbursements (${Object.keys(newReimbursement).join(', ')}) 
-                        values (${formatString}) returning *;`;
+    const updates = utilities.sanitizeReimbursement(body);
+    const newReimbursement = {...currentReimbursement, ...utilities.keysToLowerCase(updates)}
+    delete newReimbursement.dateresolved;
+    let updateString = `update reimbursements set
+                        (reimbursementid, author, amount, datesubmitted,
+                        dateresolved, description, resolver, statusid, typeid) = 
+                        ($1, $2, $3, $4, ${Date.now()}, $5, $6, $7, $8) where reimbursementid = $1
+                        returning *;`
     console.log(updateString, Object.values(newReimbursement));
     // send update query, passing in valid field/value pairs as argument array
     const results = await db.query(updateString, Object.values(newReimbursement));
@@ -49,20 +53,20 @@ export async function addReimbursement(userId, body) {
     return addedReimbursement
 }
 
-
-export async function updateReimbursement(body) {
-    const newReimbursement = utilities.sanitizeReimbursement(body);
-    const nKeys = Object.keys(newReimbursement).length;
-    console.log(nKeys, Object.keys(newReimbursement));
-    const formatString = utilities.moneyString(1,nKeys+1);
-    let updateString = `update reimbursements set (${Object.keys(newReimbursement).join(', ')}) 
-                        = (${formatString}) where reimbursementid = $${nKeys+1} returning *;`;
-    console.log(updateString, Object.values(newReimbursement));
+export async function addReimbursement(body) {
+    // reimbursements come with RID = 0 and will be assigned RID by postgresql table automatically
+    // assign any valid fields to object literal, to be converted to SQL query
+    const newRMBT = utilities.sanitizeReimbursement(body, true);
+    let updateString = `Insert into reimbursements 
+                        (author, amount, datesubmitted, dateresolved, 
+                        description, resolver, statusid, typeid) values 
+                        ($1, $2, ${Date.now()}, null, 
+                        $3, null, 1, $4) returning *;`
+    console.log(updateString, [newRMBT.author, newRMBT.amount, newRMBT.description, newRMBT.typeId]);
     // send update query, passing in valid field/value pairs as argument array
-    const queryParams = [...Object.values(newReimbursement), body['reimbursementId']];
-    const results = await db.query(updateString, queryParams);
+    const results = await db.query(updateString, [newRMBT.author, newRMBT.amount, newRMBT.description, newRMBT.typeId]);
     const result = results.rows[0];
-    const updatedReimbursement = new Reimbursement();
-    for (let key of Object.keys(updatedReimbursement)) { updatedReimbursement[key] = result[key.toLowerCase()]; }
-    return updatedReimbursement
+    const addedReimbursement = new Reimbursement();
+    for (let key of Object.keys(addedReimbursement)) { addedReimbursement[key] = result[key.toLowerCase()]; }
+    return addedReimbursement
 }
