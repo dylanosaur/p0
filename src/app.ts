@@ -34,8 +34,5 @@ process.on('SIGINT', () => {
 // todo
 // test all the way through at least once more
 
-// test change
 // stretch to do
-// hash passwords and compare hashes
-// add QC on inputs
 //  
