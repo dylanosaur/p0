@@ -16,7 +16,6 @@ app.use(session({
 //Enable express to use body-parser and cookie-parser as middle-ware
 app.use(bodyParser.json());
 app.use(express.json());
-app.use(connect())
 
 // define socket port channel for app/server communication and start listening
 const port = 3000;
