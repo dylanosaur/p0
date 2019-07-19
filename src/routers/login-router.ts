@@ -8,6 +8,7 @@ loginRouter.post('/', async (req, res) => {
 
     console.log('current sessions data is', req.session)
     // immediately hash password, all references to password will be the hashed version
+    console.log('login body', req.body)
     if (!(req.body['password'] && req.body['username'])){ 
         res.status(400).send({error: `username and/or password not found in request`})
         return;
