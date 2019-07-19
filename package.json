@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ts-node src/app.ts",
     "test": "echo 'lalala lala la laaaaaaaaa'",
-    "dev deploy": "ts-node src/app.ts"
+    "dev-deploy": "ts-node src/app.ts"
   },
   "repository": {
     "type": "git",
