@@ -6,7 +6,7 @@ import * as reimbursementService from '../services/reimbursement-service'
 const refundRouter = express.Router();
 
 // find reimbursements by user
-refundRouter.get('/author/userId:userId', async (req, res) => {
+refundRouter.get('/author/userId/:userId', async (req, res) => {
     let userCookie = req.session['identity']; // name of cookie with user details
     if (!userCookie) { 
         res.status(400).send({error: 'invalid cookie'});
@@ -66,7 +66,8 @@ refundRouter.post('/', async (req, res) => {
         res.status(400).send('Incorrect reimbursementId, please set to 0');
         return;
     }
-    try { 
+    try {
+        req.body.author = userCookie.userId;
         let reimbursement: Reimbursement = await reimbursementService.addReimbursement(req.body);
         res.status(200).send(reimbursement); //users submit reimb requests here
     } catch (error) { 

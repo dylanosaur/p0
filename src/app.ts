@@ -16,6 +16,12 @@ app.use(session({
 app.use(bodyParser.json());
 app.use(express.json());
 
+// allow connections from any port
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+  });
+
 // define socket port channel for app/server communication and start listening
 const port = 3000;
 const port_handler = app.listen(port, () => console.log(`ERS app listening on port ${port}!`));
