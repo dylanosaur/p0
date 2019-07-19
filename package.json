@@ -16,7 +16,7 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/dylanosaur/p0-ers-api/issues"
-  },
+  }, 
   "homepage": "https://github.com/dylanosaur/p0-ers-api#readme",
   "dependencies": {
     "@types/cookie-parser": "^1.4.1",
