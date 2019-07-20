@@ -1,5 +1,5 @@
 import express from "express";
-import bodyParser = require("body-parser");
+import bodyParser from "body-parser";
 import usersRouter from './routers/users-router'
 import loginRouter from './routers/login-router'
 import reimbursementsRouter from './routers/reimbursements-router'

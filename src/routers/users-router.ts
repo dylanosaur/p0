@@ -10,7 +10,7 @@ usersRouter.get('/', async (req, res) => {
     // pull cookie data with .session['cookie name']
     let userCookie = req.session['identity']; // name of cookie with user details
     if (!userCookie) { 
-        res.status(400).send({error: 'invalid cookie'});
+        res.status(400).send({error: 'invalid cookie'+process.env.POSTGRES_URL});
         return;
     }
     if (await utilities.trueIfFinanceManger(userCookie)) { 
