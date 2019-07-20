@@ -11,8 +11,10 @@ let authenticateUser = async function(req) {
     const matchedUser = await db.query(queryString, [req.body.username, req.body.password]);
     const user = new User();
     const userInfo = matchedUser.rows[0];
-    for (let key of Object.keys(user)) { user[key] = userInfo[key.toLowerCase()]}
-    console.log('found users:', user); // DEBUG
+    if (userInfo) {
+        for (let key of Object.keys(user)) { user[key] = userInfo[key.toLowerCase()]}
+        console.log('found users:', user); // DEBUG
+    }
     return user;
 }
 

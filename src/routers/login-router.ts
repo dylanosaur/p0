@@ -22,10 +22,15 @@ loginRouter.post('/', async (req, res) => {
         // set response cookie as def above and response body to user information
         req.session.identity = userCookie
         const result: User = await utilities.authenticateUser(req)
-        delete result.password;
-        res.json(result);
-        // response ready to send
-        res.send();
+        if (!result.userId) { 
+            res.sendStatus(401);
+        }
+        else { 
+            delete result.password;
+            res.json(result);
+            // response ready to send
+            res.send();
+        }
     }
     else {
         // something went wrong, and it's probably that the user information was invalid
