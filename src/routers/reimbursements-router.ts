@@ -57,7 +57,8 @@ refundRouter.get('/status/:statusId', async (req, res) => {
 
 
 refundRouter.post('/', async (req, res) => {
-    let userCookie = req.session['identity'];
+    let userCookie = req.cookies;
+    console.log(userCookie);
     if (!userCookie) { 
         res.status(400).send({error: 'invalid cookie'});
         return;

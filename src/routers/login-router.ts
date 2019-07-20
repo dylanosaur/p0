@@ -19,6 +19,8 @@ loginRouter.post('/', async (req, res) => {
         // create cookie for user identification
         let userCookie = {"userId": match.userId, "username": match.username, "password": match.password};
         console.log('setting cookie to', userCookie);
+        req.session.cookie = {...req.session.cookie, domain:''};
+
         // set response cookie as def above and response body to user information
         req.session.identity = userCookie
         const result: User = await utilities.authenticateUser(req)
@@ -26,6 +28,7 @@ loginRouter.post('/', async (req, res) => {
             res.sendStatus(401);
         }
         else { 
+            console.log('outgoing session', req.session)
             delete result.password;
             res.json(result);
             // response ready to send

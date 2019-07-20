@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ts-node src/app.ts",
     "test": "echo 'lalala lala la laaaaaaaaa'",
-    "dev-deploy": "ts-node src/app.ts"
+    "dev-deploy": "nodemon ts-node src/app.ts"
   },
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/dylanosaur/p0-ers-api/issues"
-  }, 
+  },
   "homepage": "https://github.com/dylanosaur/p0-ers-api#readme",
   "dependencies": {
     "@types/cookie-parser": "^1.4.1",
@@ -31,6 +31,7 @@
     "express-session": "^1.16.2",
     "express-sessions": "^1.0.6",
     "hash": "^0.2.1",
+    "nodemon": "^1.19.1",
     "pg": "^7.11.0",
     "postgresql-easy": "^1.2.5"
   }
