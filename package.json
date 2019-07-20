@@ -4,9 +4,9 @@
   "description": "'create a back-end API for the Expense Reimbursement System'",
   "main": "app.js",
   "scripts": {
-    "start": "ts-node src/app.ts",
+    "start": "nodemon src/app.ts",
     "test": "echo 'lalala lala la laaaaaaaaa'",
-    "dev-deploy": "nodemon ts-node src/app.ts"
+    "dev-deploy": "nodemon src/app.ts"
   },
   "repository": {
     "type": "git",
