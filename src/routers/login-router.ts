@@ -20,7 +20,7 @@ loginRouter.post('/', async (req, res) => {
         let userCookie = {"userId": match.userId, "username": match.username, "password": match.password};
         console.log('setting cookie to', userCookie);
         req.session.cookie = {...req.session.cookie, domain:''};
-
+        req.cookies = userCookie;
         // set response cookie as def above and response body to user information
         req.session.identity = userCookie
         const result: User = await utilities.authenticateUser(req)
