@@ -4,10 +4,10 @@ import usersRouter from './routers/users-router'
 import loginRouter from './routers/login-router'
 import reimbursementsRouter from './routers/reimbursements-router'
 import db from './sql-service/pg-connect'
-import session from 'express-session'
+var cookieSession = require('cookie-session')
 
 const app = express();
-app.use(session({
+app.use(cookieSession({
     resave: false,
     secret: 'my-secret',
 }));
