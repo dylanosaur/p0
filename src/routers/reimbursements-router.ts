@@ -58,12 +58,14 @@ refundRouter.get('/status/:statusId', async (req, res) => {
 
 refundRouter.post('/', async (req, res) => {
     let userCookie = req.session['identity'];
+    req.body['reimbursementId'] = parseInt(req.body['reimbursementId']);
+    req.body['statusId'] = parseInt(req.body['statusId']);
     console.log(userCookie);
     if (!userCookie) { 
         res.status(400).send({error: 'invalid cookie'});
         return;
     }
-    if (req.body['reimbursementId'] !== 0) {
+    if (parseInt(req.body['reimbursementId']) !== 0) {
         res.status(400).send('Incorrect reimbursementId, please set to 0');
         return;
     }
