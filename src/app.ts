@@ -9,6 +9,7 @@ var cookieSession = require('cookie-session')
 const app = express();
 app.use(cookieSession({
     name: 'session',
+    keys: ['identity']
     //resave: false,
     //secret: 'my-secret',
 }));
