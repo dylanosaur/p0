@@ -8,8 +8,9 @@ var cookieSession = require('cookie-session')
 
 const app = express();
 app.use(cookieSession({
-    resave: false,
-    secret: 'my-secret',
+    name: 'session',
+    //resave: false,
+    //secret: 'my-secret',
 }));
 
 //Enable express to use body-parser and cookie-parser as middle-ware
