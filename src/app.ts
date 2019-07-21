@@ -17,12 +17,14 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 // allow connections from any port
+/*
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   
     next();
   });
+*/
 
 // define socket port channel for app/server communication and start listening
 const port = 3000;
