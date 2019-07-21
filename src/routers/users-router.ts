@@ -17,7 +17,7 @@ usersRouter.get('/', async (req, res) => {
         let users:Array<User> = await usersService.getAllUsers();
         res.send(users); 
     } else { res.send("Invalid Credentials... you're not big DK!"); }
-})
+}) 
 
 // the information in the URL /stuff/:id gets stored in req.params['id']
 // this is routing and will try to match any request id to a database id
