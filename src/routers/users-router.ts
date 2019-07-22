@@ -13,7 +13,7 @@ usersRouter.get('/', async (req, res) => {
         res.status(400).send({error: 'invalid cookie'+process.env.POSTGRES_URL});
         return;
     }
-    if (await utilities.trueIfFinanceManger(userCookie)) { 
+    if (await utilities.trueIfFinanceManger(userCookie) || await utilities.trueIfAdmin(userCookie)) { 
         let users:Array<User> = await usersService.getAllUsers();
         res.send(users); 
     } else { res.send("Invalid Credentials... you're not big DK!"); }
