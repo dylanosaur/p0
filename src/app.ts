@@ -4,6 +4,7 @@ import usersRouter from './routers/users-router'
 import loginRouter from './routers/login-router'
 import reimbursementsRouter from './routers/reimbursements-router'
 import db from './sql-service/pg-connect'
+import cors from 'cors'
 var cookieSession = require('cookie-session')
 
 const app = express();
@@ -17,7 +18,7 @@ app.use(cookieSession({
 //Enable express to use body-parser and cookie-parser as middle-ware
 app.use(bodyParser.json());
 app.use(express.json());
-
+app.use(cors());
 // allow connections from any port
 /*
 app.use(function (req, res, next) {
