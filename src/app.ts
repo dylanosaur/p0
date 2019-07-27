@@ -18,7 +18,6 @@ app.use(cookieSession({
 //Enable express to use body-parser and cookie-parser as middle-ware
 app.use(bodyParser.json());
 app.use(express.json());
-app.use(cors());
 // allow connections from any port
 /*
 app.use(function (req, res, next) {
