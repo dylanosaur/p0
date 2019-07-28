@@ -80,6 +80,7 @@ refundRouter.post('/', async (req, res) => {
 
 
 refundRouter.patch('/', async (req, res) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
     let userCookie = req.session['identity']; // name of cookie with user details
     if (!userCookie) { 
         res.status(400).send({error: 'invalid cookie'});
