@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 app.use(cors({
-    origin: 'http://ers-front-end.s3.us-east-2.amazonaws.com/index.html',
+    origin: 'http://ers-front-end.s3.us-east-2.amazonaws.com',
     //origin: ['http://localhost:3000', 'https://ers-front-end.s3.us-east-2.amazonaws.com:3000/'],
     credentials: true,
 
