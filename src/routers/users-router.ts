@@ -32,7 +32,8 @@ usersRouter.get('/:id', async (req, res) => {
         res.status(400).send({error: `invalid id given: ${userId}`});
         return;
     }
-    if (!(await utilities.trueIfFinanceManger(userCookie) || userCookie.userId === userId)) {
+    if (!(await utilities.trueIfFinanceManger(userCookie) || userCookie.userId === userId || 
+    utilities.trueIfAdmin(userCookie))) {
         res.send("Invalid Credentials... you're not that user or big DK!");
         return;
     }
