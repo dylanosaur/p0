@@ -18,33 +18,13 @@ app.use(cookieSession({
 //Enable express to use body-parser and cookie-parser as middle-ware
 app.use(bodyParser.json());
 app.use(express.json());
-// allow connections from any port
-/*
-app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
-    next();
-  });
-*/
-//app.use(cors());
+
 app.use(cors({
     origin: 'http://localhost:3000',
     credentials: true,
 
 }))
-/*
-app.use(function(req, res, next) {  
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-//  res.header('Access-Control-Allow-Origin', String(req.headers.origin));
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Origin");
-    res.header("Access-Control-Allow-Credentials", 'true');
-    res.header('Access-Control-Allow-Methods', 'POST, GET, PATCH, OPTIONS');
-    res.header('Access-Control-Expose-Headers', 'Connection')
 
-    next();
-});
-*/
 // define socket port channel for app/server communication and start listening
 const port = 3000;
 const port_handler = app.listen(port, () => console.log(`ERS app listening on port ${port}!`));

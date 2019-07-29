@@ -33,16 +33,14 @@ let trueIfFinanceManger = async function(userCookie) {
 }
 
 let trueIfAdmin = async function(userCookie){
-    let queryString = `select * from users where roleid = 1;`
-    const userId = userCookie && userCookie.userId;
-    const password = userCookie && userCookie.password;
+    const queryString = `select (roleid) from users where username = $1 and password = $2;`
     console.log(queryString);
-    let admin = await db.query(queryString);
-    // could add QC check here
-    if (!admin.rows.length) { return false; }
-    admin = admin.rows[0];
-    console.log('found admin: ', admin);
-    return (userId == admin.userid && password == admin.password);
+    const username = userCookie && userCookie.username;
+    const password = userCookie && userCookie.password;
+    const result = await db.query(queryString, [userCookie.username, userCookie.password]);
+    const userRole = result.rows[0].roleid;
+    console.log('userRole is found to be:', userRole, typeof(userRole) );
+    return (userRole===1)
 }
 
 const sanitizeObject = function(obj, removeId=false, myType='Reimbursement') { 
