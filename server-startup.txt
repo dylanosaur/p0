@@ -36,7 +36,7 @@ create table reimbursements (
   amount float not null,
   dateSubmitted bigint not null, 
   dateResolved bigint,
-  description varchar (30) not null, 
+  description varchar (300) not null, 
   resolver int, foreign key (resolver) references users (userId), 
   statusId int, foreign key (statusId) references reimbursement_statuses (statusId),
   typeId int, foreign key (typeId) references reimbursement_types (typeId)

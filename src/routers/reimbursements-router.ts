@@ -22,14 +22,14 @@ refundRouter.get('/author/userId/:userId', async (req, res) => {
     console.log(userCookie, req.params)
     console.log('', isFinanceManager, isCurrentUser)
     if (!(isFinanceManager || isCurrentUser)) {
-        res.status(400).send("Invalid Credentials... you're not that user or big DK!");
+        res.status(400).send({error:"Invalid Credentials... you're not that user or big DK!"});
         return
     }
     // similiar filter operation to matchUserAndPassword but with userId
     console.log('using userId', userCookie.userId, userId);
     let refunds: Array<Reimbursement> = await reimbursementService.getReimbursementsFromUserId(userId)
     if (refunds.length > 0) { res.status(200).send(refunds); }
-    else { res.status(200).send({'msg':'no reimbursements found for that user'}); }
+    else { res.status(200).send({msg:'no reimbursements found for that user'}); }
 })
 
 // find reimbursements by statusId
@@ -52,7 +52,7 @@ refundRouter.get('/status/:statusId', async (req, res) => {
     // similiar filter operation to matchUserAndPassword but with userId
     let refunds: Array<Reimbursement> = await reimbursementService.getReimbursementsFromStatus(statusId)
     if (refunds.length) { res.status(200).send(refunds); }
-    else { res.status(200).send('No refunds are found with that status')}
+    else { res.status(200).send({msg:'No refunds are found with that status'})}
 })
 
 
@@ -66,7 +66,7 @@ refundRouter.post('/', async (req, res) => {
         return;
     }
     if (parseInt(req.body['reimbursementId']) !== 0) {
-        res.status(400).send('Incorrect reimbursementId, please set to 0');
+        res.status(400).send({error:'Incorrect reimbursementId, please set to 0'});
         return;
     }
     try {
@@ -87,7 +87,7 @@ refundRouter.patch('/', async (req, res) => {
         return;
     }
     if (!(utilities.trueIfFinanceManger(userCookie))) {
-        res.send("Invalid Credentials... you're not that user or big DK!");
+        res.send({error:"Invalid Credentials... you're not that user or big DK!"});
         return
     }
     try { 
