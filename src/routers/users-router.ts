@@ -16,7 +16,7 @@ usersRouter.get('/', async (req, res) => {
     if (await utilities.trueIfFinanceManger(userCookie) || await utilities.trueIfAdmin(userCookie)) { 
         let users:Array<User> = await usersService.getAllUsers();
         res.send(users); 
-    } else { res.send("Invalid Credentials... you're not big DK!"); }
+    } else { res.send({msg:"Invalid Credentials... you're not big DK!"}); }
 }) 
 
 // the information in the URL /stuff/:id gets stored in req.params['id']
@@ -34,7 +34,7 @@ usersRouter.get('/:id', async (req, res) => {
     }
     if (!(await utilities.trueIfFinanceManger(userCookie) || userCookie.userId === userId || 
     utilities.trueIfAdmin(userCookie))) {
-        res.send("Invalid Credentials... you're not that user or big DK!");
+        res.send({msg:"Invalid Credentials... you're not that user or big DK!"});
         return;
     }
     let matchedUser: User = await usersService.matchUserWithUserId(userId);
@@ -46,7 +46,7 @@ usersRouter.get('/:id', async (req, res) => {
 usersRouter.patch('/', async (req, res) => {
     console.log('request session:', req.session['identity']);
     if (!await utilities.trueIfAdmin(req.session['identity'])) {
-        res.send('Invalid credentials, this incident will be reported');
+        res.send({msg:'Invalid credentials, this incident will be reported'});
         return;
     }
     const userId = parseInt(req.body['userId']);
@@ -59,7 +59,7 @@ usersRouter.patch('/', async (req, res) => {
         delete updatedUser.password
         res.send(updatedUser);
     } catch (error) { 
-        res.status(400).send('database failed to update with error: '+error);
+        res.status(400).send({error:'database failed to update with error: '+error});
     }
 })
 
