@@ -27,7 +27,7 @@ let trueIfFinanceManger = async function(userCookie) {
     const username = userCookie && userCookie.username;
     const password = userCookie && userCookie.password;
     const result = await db.query(queryString, [userCookie.username, userCookie.password]);
-    const userRole = result.rows[0].roleid;
+    const userRole = result.rows[0] && result.rows[0].roleid;
     console.log('userRole is found to be:', userRole, typeof(userRole) );
     return (userRole===2)
 }
@@ -38,7 +38,7 @@ let trueIfAdmin = async function(userCookie){
     const username = userCookie && userCookie.username;
     const password = userCookie && userCookie.password;
     const result = await db.query(queryString, [userCookie.username, userCookie.password]);
-    const userRole = result.rows[0].roleid;
+    const userRole = result.rows[0] && result.rows[0].roleid;
     console.log('userRole is found to be:', userRole, typeof(userRole) );
     return (userRole===1)
 }
