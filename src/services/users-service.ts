@@ -1,6 +1,7 @@
 import User from '../models/User'
 import utilities from './utilities'
 import db from '../sql-service/pg-connect'
+const {sha256} = require('crypto-hash');
 
 export async function matchUserWithUserId(userId): Promise<User> {
     const queryString = `select * from users where userid = $1`;
