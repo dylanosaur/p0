@@ -15,7 +15,7 @@ export async function matchUserWithUserId(userId): Promise<User> {
 export async function updateUser(userId, body): Promise<User> {
     // loop over keys in User object for possible update-able keys
     const currentUser = await db.query('select * from users where userid = $1', [userId]);
-    if (body['password']) { body['password'] = sha256(body['password']) }
+    if (body['password']) { body['password'] = await sha256(body['password']) }
     const updates = utilities.sanitizeObject(body, false, 'User')
     console.log(currentUser.rows[0], utilities.keysToLowerCase(updates))
     const updatedUserSQL = {...currentUser.rows[0], ...utilities.keysToLowerCase(updates) }
