@@ -56,7 +56,7 @@ usersRouter.patch('/', async (req, res) => {
     }
     try { 
         let updatedUser: User = await usersService.updateUser(userId, req.body);
-        //delete updatedUser.password
+        delete updatedUser.password
         res.send(updatedUser);
     } catch (error) { 
         res.status(400).send({error:'database failed to update with error: '+error});
