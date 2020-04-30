@@ -6,7 +6,9 @@
   "scripts": {
     "start": "nodemon src/app.ts",
     "test": "echo 'lalala lala la laaaaaaaaa'",
-    "dev-deploy": "nodemon src/app.ts"
+    "dev-deploy": "nodemon src/app.ts",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -35,6 +37,8 @@
     "hash": "^0.2.1",
     "nodemon": "^1.19.1",
     "pg": "^7.11.0",
-    "postgresql-easy": "^1.2.5"
-  }
+    "postgresql-easy": "^1.2.5",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
