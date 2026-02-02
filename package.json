@@ -33,7 +33,7 @@
     "express-session": "^1.16.2",
     "express-sessions": "^1.0.6",
     "hash": "^0.2.1",
-    "nodemon": "^1.19.1",
+    "nodemon": "^2.0.0",
     "pg": "^7.11.0",
     "postgresql-easy": "^1.2.5"
   }
